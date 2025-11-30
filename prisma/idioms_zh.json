@@ -1,0 +1,1778 @@
+[
+    {
+        "phrase": "心想事成",
+        "clue": "May all your wishes come true"
+    },
+    {
+        "phrase": "万事如意",
+        "clue": "May everything go as you wish"
+    },
+    {
+        "phrase": "笑口常开",
+        "clue": "Always be cheerful"
+    },
+    {
+        "phrase": "龙马精神",
+        "clue": "Full of energy and vitality"
+    },
+    {
+        "phrase": "一见如故",
+        "clue": "Hitting it off immediately"
+    },
+    {
+        "phrase": "才貌双全",
+        "clue": "Talented and good-looking"
+    },
+    {
+        "phrase": "感激不尽",
+        "clue": "Inexpressible gratitude"
+    },
+    {
+        "phrase": "一路顺风",
+        "clue": "Have a smooth journey"
+    },
+    {
+        "phrase": "助人为乐",
+        "clue": "Finding joy in helping others"
+    },
+    {
+        "phrase": "锐不可当",
+        "clue": "Irresistible momentum"
+    },
+    {
+        "phrase": "转弯抹角",
+        "clue": "Beat around the bush"
+    },
+    {
+        "phrase": "微不足道",
+        "clue": "Too trifling to mention"
+    },
+    {
+        "phrase": "有头有脸",
+        "clue": "Respected and well-known"
+    },
+    {
+        "phrase": "白头偕老",
+        "clue": "Live together until old age"
+    },
+    {
+        "phrase": "手脑并用",
+        "clue": "Use hands and mind together"
+    },
+    {
+        "phrase": "街头巷尾",
+        "clue": "Everywhere in the city"
+    },
+    {
+        "phrase": "从头到脚",
+        "clue": "From head to toe"
+    },
+    {
+        "phrase": "从头到尾",
+        "clue": "From beginning to end"
+    },
+    {
+        "phrase": "抱头痛哭",
+        "clue": "To cry bitterly together"
+    },
+    {
+        "phrase": "显而易见",
+        "clue": "Obvious; clear to see"
+    },
+    {
+        "phrase": "众所周知",
+        "clue": "As everyone knows"
+    },
+    {
+        "phrase": "前所未有",
+        "clue": "Unprecedented"
+    },
+    {
+        "phrase": "不可思议",
+        "clue": "Inconceivable; unimaginable"
+    },
+    {
+        "phrase": "千方百计",
+        "clue": "To try every possible means"
+    },
+    {
+        "phrase": "先发制人",
+        "clue": "Preemptive strike"
+    },
+    {
+        "phrase": "乱七八糟",
+        "clue": "In a mess"
+    },
+    {
+        "phrase": "脱颖而出",
+        "clue": "To stand out"
+    },
+    {
+        "phrase": "一见钟情",
+        "clue": "Love at first sight"
+    },
+    {
+        "phrase": "一心一意",
+        "clue": "Wholeheartedly"
+    },
+    {
+        "phrase": "三心二意",
+        "clue": "Half-hearted"
+    },
+    {
+        "phrase": "马马虎虎",
+        "clue": "So-so; careless"
+    },
+    {
+        "phrase": "一举两得",
+        "clue": "Kill two birds with one stone"
+    },
+    {
+        "phrase": "出人意料",
+        "clue": "Unexpected"
+    },
+    {
+        "phrase": "忠言逆耳",
+        "clue": "Truthful words are unpleasant"
+    },
+    {
+        "phrase": "理所当然",
+        "clue": "Of course; naturally"
+    },
+    {
+        "phrase": "雄心勃勃",
+        "clue": "Ambitious"
+    },
+    {
+        "phrase": "能者多劳",
+        "clue": "Able people do more work"
+    },
+    {
+        "phrase": "埋头苦干",
+        "clue": "Engrossed in hard work"
+    },
+    {
+        "phrase": "废寝忘食",
+        "clue": "Forget to eat and sleep"
+    },
+    {
+        "phrase": "胸有成竹",
+        "clue": "Have a well-thought-out plan"
+    },
+    {
+        "phrase": "一丝不苟",
+        "clue": "Meticulous"
+    },
+    {
+        "phrase": "半途而废",
+        "clue": "Give up halfway"
+    },
+    {
+        "phrase": "卧虎藏龙",
+        "clue": "Hidden talents"
+    },
+    {
+        "phrase": "入乡随俗",
+        "clue": "When in Rome, do as the Romans do"
+    },
+    {
+        "phrase": "祸起萧墙",
+        "clue": "Trouble from within"
+    },
+    {
+        "phrase": "积重难返",
+        "clue": "Old habits die hard"
+    },
+    {
+        "phrase": "集腋成裘",
+        "clue": "Many little things add up"
+    },
+    {
+        "phrase": "计日程功",
+        "clue": "Success is near"
+    },
+    {
+        "phrase": "济济一堂",
+        "clue": "Gathering of many talents"
+    },
+    {
+        "phrase": "间不容发",
+        "clue": "Extremely critical situation"
+    },
+    {
+        "phrase": "见仁见智",
+        "clue": "Opinions vary"
+    },
+    {
+        "phrase": "见贤思齐",
+        "clue": "Emulate the virtuous"
+    },
+    {
+        "phrase": "矫揉造作",
+        "clue": "Artificial behavior"
+    },
+    {
+        "phrase": "矫枉过正",
+        "clue": "Overcorrect"
+    },
+    {
+        "phrase": "金科玉律",
+        "clue": "Golden rule"
+    },
+    {
+        "phrase": "噤若寒蝉",
+        "clue": "Silent out of fear"
+    },
+    {
+        "phrase": "敬谢不敏",
+        "clue": "Politely decline"
+    },
+    {
+        "phrase": "久假不归",
+        "clue": "Borrow for a long time"
+    },
+    {
+        "phrase": "开卷有益",
+        "clue": "Reading is beneficial"
+    },
+    {
+        "phrase": "恪遵功令",
+        "clue": "Strictly obey orders"
+    },
+    {
+        "phrase": "空穴来风",
+        "clue": "Rumors have some basis"
+    },
+    {
+        "phrase": "苦心孤诣",
+        "clue": "Painstaking efforts"
+    },
+    {
+        "phrase": "狼奔豕突",
+        "clue": "Run amok"
+    },
+    {
+        "phrase": "良莠不齐",
+        "clue": "Mixed quality"
+    },
+    {
+        "phrase": "临渊羡鱼",
+        "clue": "Desire without action"
+    },
+    {
+        "phrase": "令人发指",
+        "clue": "Extremely indignant"
+    },
+    {
+        "phrase": "另眼相看",
+        "clue": "Treat with special respect"
+    },
+    {
+        "phrase": "门可罗雀",
+        "clue": "Deserted"
+    },
+    {
+        "phrase": "门庭若市",
+        "clue": "Bustling with visitors"
+    },
+    {
+        "phrase": "面目全非",
+        "clue": "Changed beyond recognition"
+    },
+    {
+        "phrase": "目无全牛",
+        "clue": "Superb skill"
+    },
+    {
+        "phrase": "沐猴而冠",
+        "clue": "Dressed up but lacking dignity"
+    },
+    {
+        "phrase": "暮鼓晨钟",
+        "clue": "Wake-up call"
+    },
+    {
+        "phrase": "南辕北辙",
+        "clue": "Defeat one's purpose"
+    },
+    {
+        "phrase": "泥沙俱下",
+        "clue": "Good and bad mixed"
+    },
+    {
+        "phrase": "抛砖引玉",
+        "clue": "Offer humble opinion to get better ones"
+    },
+    {
+        "phrase": "蓬荜生辉",
+        "clue": "Humble abode is honored"
+    },
+    {
+        "phrase": "披肝沥胆",
+        "clue": "Utterly sincere"
+    },
+    {
+        "phrase": "披沙拣金",
+        "clue": "Select the best"
+    },
+    {
+        "phrase": "萍水相逢",
+        "clue": "Meeting by chance"
+    },
+    {
+        "phrase": "期期艾艾",
+        "clue": "Stuttering"
+    },
+    {
+        "phrase": "喜出望外",
+        "clue": "Overjoyed"
+    },
+    {
+        "phrase": "流连忘返",
+        "clue": "Linger and forget to return"
+    },
+    {
+        "phrase": "骨瘦如柴",
+        "clue": "Extremely thin"
+    },
+    {
+        "phrase": "极目远眺",
+        "clue": "Look far into the distance"
+    },
+    {
+        "phrase": "溜之大吉",
+        "clue": "Slip away"
+    },
+    {
+        "phrase": "若无其事",
+        "clue": "As if nothing happened"
+    },
+    {
+        "phrase": "山童石烂",
+        "clue": "Impossible"
+    },
+    {
+        "phrase": "移山跨海",
+        "clue": "Immense power"
+    },
+    {
+        "phrase": "恩重如山",
+        "clue": "Great indebtedness"
+    },
+    {
+        "phrase": "一木难支",
+        "clue": "One person cannot sustain it"
+    },
+    {
+        "phrase": "一日千里",
+        "clue": "Rapid progress"
+    },
+    {
+        "phrase": "一毛不拔",
+        "clue": "Extremely stingy"
+    },
+    {
+        "phrase": "一以当十",
+        "clue": "One against ten"
+    },
+    {
+        "phrase": "一龙一猪",
+        "clue": "Vast difference"
+    },
+    {
+        "phrase": "一叶障目",
+        "clue": "Shortsighted"
+    },
+    {
+        "phrase": "一丘之貉",
+        "clue": "Birds of a feather"
+    },
+    {
+        "phrase": "一发千钧",
+        "clue": "Imminent peril"
+    },
+    {
+        "phrase": "一死一生",
+        "clue": "Life and death"
+    },
+    {
+        "phrase": "一网打尽",
+        "clue": "Catch them all"
+    },
+    {
+        "phrase": "一衣带水",
+        "clue": "Narrow strip of water"
+    },
+    {
+        "phrase": "一字千金",
+        "clue": "Invaluable writing"
+    },
+    {
+        "phrase": "一字之师",
+        "clue": "One-word teacher"
+    },
+    {
+        "phrase": "一抔黄土",
+        "clue": "Death"
+    },
+    {
+        "phrase": "一时之秀",
+        "clue": "Outstanding talent of the time"
+    },
+    {
+        "phrase": "一身是胆",
+        "clue": "Full of courage"
+    },
+    {
+        "phrase": "一身两任",
+        "clue": "Two responsibilities"
+    },
+    {
+        "phrase": "一饭千金",
+        "clue": "Immense gratitude"
+    },
+    {
+        "phrase": "一国三公",
+        "clue": "Disunity"
+    },
+    {
+        "phrase": "一鸣惊人",
+        "clue": "Become famous overnight"
+    },
+    {
+        "phrase": "一败涂地",
+        "clue": "Crushing defeat"
+    },
+    {
+        "phrase": "一往情深",
+        "clue": "Deeply attached"
+    },
+    {
+        "phrase": "一挥而就",
+        "clue": "Finish quickly"
+    },
+    {
+        "phrase": "一误再误",
+        "clue": "Err repeatedly"
+    },
+    {
+        "phrase": "一钱不值",
+        "clue": "Worthless"
+    },
+    {
+        "phrase": "一笔勾销",
+        "clue": "Cancel completely"
+    },
+    {
+        "phrase": "一窍不通",
+        "clue": "Completely ignorant"
+    },
+    {
+        "phrase": "一诺千金",
+        "clue": "Promise kept"
+    },
+    {
+        "phrase": "一厢情愿",
+        "clue": "Wishful thinking"
+    },
+    {
+        "phrase": "一琴一鹤",
+        "clue": "Simple life"
+    },
+    {
+        "phrase": "一朝一夕",
+        "clue": "Short time"
+    },
+    {
+        "phrase": "一傅众咻",
+        "clue": "Hard to learn in bad environment"
+    },
+    {
+        "phrase": "一寒如此",
+        "clue": "Destitute"
+    },
+    {
+        "phrase": "一鼓作气",
+        "clue": "One sustained effort"
+    },
+    {
+        "phrase": "一筹莫展",
+        "clue": "At wit's end"
+    },
+    {
+        "phrase": "一意孤行",
+        "clue": "Act willfully"
+    },
+    {
+        "phrase": "一箭双雕",
+        "clue": "Kill two birds with one stone"
+    },
+    {
+        "phrase": "一夔已足",
+        "clue": "One talent is enough"
+    },
+    {
+        "phrase": "一去不复返",
+        "clue": "Gone forever"
+    },
+    {
+        "phrase": "一问三不知",
+        "clue": "Know nothing"
+    },
+    {
+        "phrase": "一不做二不休",
+        "clue": "Go all the way"
+    },
+    {
+        "phrase": "一蟹不如一蟹",
+        "clue": "Getting worse"
+    },
+    {
+        "phrase": "一人得道鸡犬升天",
+        "clue": "Hangers-on benefit"
+    },
+    {
+        "phrase": "二桃杀三士",
+        "clue": "Set rivals against each other"
+    },
+    {
+        "phrase": "七步之才",
+        "clue": "Quick-witted"
+    },
+    {
+        "phrase": "七擒七纵",
+        "clue": "Subdue with leniency"
+    },
+    {
+        "phrase": "十二金牌",
+        "clue": "Urgent summons"
+    },
+    {
+        "phrase": "十行俱下",
+        "clue": "Read quickly"
+    },
+    {
+        "phrase": "十羊九牧",
+        "clue": "Too many bosses"
+    },
+    {
+        "phrase": "十鼠同穴",
+        "clue": "Partners in crime"
+    },
+    {
+        "phrase": "八仙过海",
+        "clue": "Show special abilities"
+    },
+    {
+        "phrase": "入木三分",
+        "clue": "Profound"
+    },
+    {
+        "phrase": "入幕之宾",
+        "clue": "Trusted confidant"
+    },
+    {
+        "phrase": "九牛一毛",
+        "clue": "Insignificant amount"
+    },
+    {
+        "phrase": "人人自危",
+        "clue": "Everyone feels insecure"
+    },
+    {
+        "phrase": "人中之龙",
+        "clue": "Outstanding person"
+    },
+    {
+        "phrase": "人心如面",
+        "clue": "Everyone is different"
+    },
+    {
+        "phrase": "人自为战",
+        "clue": "Disunited"
+    },
+    {
+        "phrase": "人言可畏",
+        "clue": "Gossip is fearful"
+    },
+    {
+        "phrase": "人弃我取",
+        "clue": "Use what others discard"
+    },
+    {
+        "phrase": "人杰地灵",
+        "clue": "Place of talent"
+    },
+    {
+        "phrase": "人面桃花",
+        "clue": "Fleeting beauty"
+    },
+    {
+        "phrase": "人给家足",
+        "clue": "Prosperity"
+    },
+    {
+        "phrase": "人琴俱亡",
+        "clue": "Lament for friend"
+    },
+    {
+        "phrase": "人非圣贤孰能无过",
+        "clue": "To err is human"
+    },
+    {
+        "phrase": "卜昼卜夜",
+        "clue": "Work day and night"
+    },
+    {
+        "phrase": "百尺竿头",
+        "clue": "Highest point"
+    },
+    {
+        "phrase": "百感交集",
+        "clue": "Mixed emotions"
+    },
+    {
+        "phrase": "百花齐放",
+        "clue": "Diverse ideas"
+    },
+    {
+        "phrase": "百口莫辩",
+        "clue": "Unable to explain"
+    },
+    {
+        "phrase": "百闻不如一见",
+        "clue": "Seeing is believing"
+    },
+    {
+        "phrase": "班门弄斧",
+        "clue": "Show off before expert"
+    },
+    {
+        "phrase": "半斤八两",
+        "clue": "Equally matched"
+    },
+    {
+        "phrase": "饱经风霜",
+        "clue": "Weather-beaten"
+    },
+    {
+        "phrase": "杯弓蛇影",
+        "clue": "Suspicious and fearful"
+    },
+    {
+        "phrase": "杯水车薪",
+        "clue": "Inadequate measures"
+    },
+    {
+        "phrase": "背道而驰",
+        "clue": "Run counter to"
+    },
+    {
+        "phrase": "笨鸟先飞",
+        "clue": "Slow learner starts early"
+    },
+    {
+        "phrase": "逼上梁山",
+        "clue": "Driven to desperation"
+    },
+    {
+        "phrase": "避重就轻",
+        "clue": "Evade main issue"
+    },
+    {
+        "phrase": "变本加厉",
+        "clue": "Intensify"
+    },
+    {
+        "phrase": "别具一格",
+        "clue": "Distinctive style"
+    },
+    {
+        "phrase": "别开生面",
+        "clue": "New and unique"
+    },
+    {
+        "phrase": "病入膏肓",
+        "clue": "Beyond cure"
+    },
+    {
+        "phrase": "不耻下问",
+        "clue": "Not ashamed to ask"
+    },
+    {
+        "phrase": "不攻自破",
+        "clue": "Collapse by itself"
+    },
+    {
+        "phrase": "不寒而栗",
+        "clue": "Tremble with fear"
+    },
+    {
+        "phrase": "不近人情",
+        "clue": "Unreasonable"
+    },
+    {
+        "phrase": "不拘一格",
+        "clue": "Not limited to one style"
+    },
+    {
+        "phrase": "不伦不类",
+        "clue": "Nondescript"
+    },
+    {
+        "phrase": "不名一文",
+        "clue": "Penniless"
+    },
+    {
+        "phrase": "不求甚解",
+        "clue": "Superficial understanding"
+    },
+    {
+        "phrase": "不屈不挠",
+        "clue": "Unyielding"
+    },
+    {
+        "phrase": "不三不四",
+        "clue": "Dubious"
+    },
+    {
+        "phrase": "不声不响",
+        "clue": "Quietly"
+    },
+    {
+        "phrase": "不速之客",
+        "clue": "Uninvited guest"
+    },
+    {
+        "phrase": "不痛不痒",
+        "clue": "Superficial"
+    },
+    {
+        "phrase": "不闻不问",
+        "clue": "Ignore completely"
+    },
+    {
+        "phrase": "不为已甚",
+        "clue": "Not overdo it"
+    },
+    {
+        "phrase": "不言而喻",
+        "clue": "Self-evident"
+    },
+    {
+        "phrase": "不遗余力",
+        "clue": "Spare no effort"
+    },
+    {
+        "phrase": "不亦乐乎",
+        "clue": "Extremely happy"
+    },
+    {
+        "phrase": "不知所措",
+        "clue": "At a loss"
+    },
+    {
+        "phrase": "参差不齐",
+        "clue": "Uneven"
+    },
+    {
+        "phrase": "层出不穷",
+        "clue": "Emerge endlessly"
+    },
+    {
+        "phrase": "察言观色",
+        "clue": "Size up situation"
+    },
+    {
+        "phrase": "畅所欲言",
+        "clue": "Speak freely"
+    },
+    {
+        "phrase": "趁火打劫",
+        "clue": "Take advantage of misfortune"
+    },
+    {
+        "phrase": "瞠目结舌",
+        "clue": "Dumbfounded"
+    },
+    {
+        "phrase": "惩前毖后",
+        "clue": "Learn from mistakes"
+    },
+    {
+        "phrase": "愁眉苦脸",
+        "clue": "Look miserable"
+    },
+    {
+        "phrase": "出尔反尔",
+        "clue": "Contradict oneself"
+    },
+    {
+        "phrase": "出类拔萃",
+        "clue": "Outstanding"
+    },
+    {
+        "phrase": "出奇制胜",
+        "clue": "Win by surprise"
+    },
+    {
+        "phrase": "触类旁通",
+        "clue": "Infer from one fact"
+    },
+    {
+        "phrase": "吹毛求疵",
+        "clue": "Nitpick"
+    },
+    {
+        "phrase": "垂涎三尺",
+        "clue": "Extremely envious"
+    },
+    {
+        "phrase": "唇亡齿寒",
+        "clue": "Interdependent"
+    },
+    {
+        "phrase": "从善如流",
+        "clue": "Follow good advice"
+    },
+    {
+        "phrase": "措手不及",
+        "clue": "Caught unprepared"
+    },
+    {
+        "phrase": "打草惊蛇",
+        "clue": "Alert the enemy"
+    },
+    {
+        "phrase": "大刀阔斧",
+        "clue": "Bold and resolute"
+    },
+    {
+        "phrase": "大公无私",
+        "clue": "Impartial"
+    },
+    {
+        "phrase": "大惊小怪",
+        "clue": "Fuss over nothing"
+    },
+    {
+        "phrase": "大同小异",
+        "clue": "Essentially similar"
+    },
+    {
+        "phrase": "大显身手",
+        "clue": "Show off skills"
+    },
+    {
+        "phrase": "大义灭亲",
+        "clue": "Sacrifice family for justice"
+    },
+    {
+        "phrase": "当务之急",
+        "clue": "Top priority"
+    },
+    {
+        "phrase": "得寸进尺",
+        "clue": "Insatiably greedy"
+    },
+    {
+        "phrase": "得意忘形",
+        "clue": "Carried away by success"
+    },
+    {
+        "phrase": "德高望重",
+        "clue": "High prestige"
+    },
+    {
+        "phrase": "对症下药",
+        "clue": "Prescribe right remedy"
+    },
+    {
+        "phrase": "耳濡目染",
+        "clue": "Influenced by environment"
+    },
+    {
+        "phrase": "发奋图强",
+        "clue": "Strive for success"
+    },
+    {
+        "phrase": "防患未然",
+        "clue": "Take precautions"
+    },
+    {
+        "phrase": "风声鹤唳",
+        "clue": "Extreme panic"
+    },
+    {
+        "phrase": "敷衍了事",
+        "clue": "Muddle through"
+    },
+    {
+        "phrase": "俯首称臣",
+        "clue": "Submit oneself"
+    },
+    {
+        "phrase": "改过自新",
+        "clue": "Turn over a new leaf"
+    },
+    {
+        "phrase": "肝胆相照",
+        "clue": "Devoted friends"
+    },
+    {
+        "phrase": "高瞻远瞩",
+        "clue": "Farsighted"
+    },
+    {
+        "phrase": "高枕无忧",
+        "clue": "Free from anxiety"
+    },
+    {
+        "phrase": "隔靴搔痒",
+        "clue": "Ineffective"
+    },
+    {
+        "phrase": "各奔前程",
+        "clue": "Pursue own future"
+    },
+    {
+        "phrase": "各抒己见",
+        "clue": "Express opinions freely"
+    },
+    {
+        "phrase": "根深蒂固",
+        "clue": "Ingrained"
+    },
+    {
+        "phrase": "功亏一篑",
+        "clue": "Fail at last minute"
+    },
+    {
+        "phrase": "勾心斗角",
+        "clue": "Plot and scheme"
+    },
+    {
+        "phrase": "沽名钓誉",
+        "clue": "Seek undeserved fame"
+    },
+    {
+        "phrase": "故步自封",
+        "clue": "Complacent"
+    },
+    {
+        "phrase": "顾此失彼",
+        "clue": "Unable to cope"
+    },
+    {
+        "phrase": "顾名思义",
+        "clue": "Interpret by name"
+    },
+    {
+        "phrase": "广开言路",
+        "clue": "Encourage views"
+    },
+    {
+        "phrase": "归心似箭",
+        "clue": "Anxious to return home"
+    },
+    {
+        "phrase": "含辛茹苦",
+        "clue": "Bear hardships"
+    },
+    {
+        "phrase": "汗牛充栋",
+        "clue": "Immense collection of books"
+    },
+    {
+        "phrase": "好高骛远",
+        "clue": "Aim too high"
+    },
+    {
+        "phrase": "和颜悦色",
+        "clue": "Pleasant countenance"
+    },
+    {
+        "phrase": "狐假虎威",
+        "clue": "Bully with powerful connections"
+    },
+    {
+        "phrase": "胡思乱想",
+        "clue": "Imagination run wild"
+    },
+    {
+        "phrase": "花言巧语",
+        "clue": "Sweet talk"
+    },
+    {
+        "phrase": "画蛇添足",
+        "clue": "Overdo it"
+    },
+    {
+        "phrase": "诲人不倦",
+        "clue": "Tireless in teaching"
+    },
+    {
+        "phrase": "混水摸鱼",
+        "clue": "Fish in troubled waters"
+    },
+    {
+        "phrase": "活灵活现",
+        "clue": "Lifelike"
+    },
+    {
+        "phrase": "火上浇油",
+        "clue": "Make bad situation worse"
+    },
+    {
+        "phrase": "鸡鸣狗盗",
+        "clue": "Petty tricks"
+    },
+    {
+        "phrase": "急功近利",
+        "clue": "Eager for quick success"
+    },
+    {
+        "phrase": "急中生智",
+        "clue": "Resourceful in crisis"
+    },
+    {
+        "phrase": "己所不欲勿施于人",
+        "clue": "Do not do unto others..."
+    },
+    {
+        "phrase": "家喻户晓",
+        "clue": "Widely known"
+    },
+    {
+        "phrase": "坚忍不拔",
+        "clue": "Persevering"
+    },
+    {
+        "phrase": "见多识广",
+        "clue": "Experienced"
+    },
+    {
+        "phrase": "见异思迁",
+        "clue": "Fickle"
+    },
+    {
+        "phrase": "见义勇为",
+        "clue": "Act heroically"
+    },
+    {
+        "phrase": "姜太公钓鱼愿者上钩",
+        "clue": "Let things take natural course"
+    },
+    {
+        "phrase": "解甲归田",
+        "clue": "Retire to farming"
+    },
+    {
+        "phrase": "金蝉脱壳",
+        "clue": "Escape subtly"
+    },
+    {
+        "phrase": "金玉满堂",
+        "clue": "Wealthy family"
+    },
+    {
+        "phrase": "津津有味",
+        "clue": "With gusto"
+    },
+    {
+        "phrase": "精益求精",
+        "clue": "Strive for perfection"
+    },
+    {
+        "phrase": "井底之蛙",
+        "clue": "Limited outlook"
+    },
+    {
+        "phrase": "居安思危",
+        "clue": "Vigilant in peace"
+    },
+    {
+        "phrase": "举一反三",
+        "clue": "Draw inferences"
+    },
+    {
+        "phrase": "举足轻重",
+        "clue": "Pivotal importance"
+    },
+    {
+        "phrase": "开门见山",
+        "clue": "Straight to the point"
+    },
+    {
+        "phrase": "慷慨解囊",
+        "clue": "Contribute generously"
+    },
+    {
+        "phrase": "口是心非",
+        "clue": "Hypocritical"
+    },
+    {
+        "phrase": "苦口婆心",
+        "clue": "Earnest advice"
+    },
+    {
+        "phrase": "苦心经营",
+        "clue": "Work hard to build"
+    },
+    {
+        "phrase": "夸夸其谈",
+        "clue": "Brag"
+    },
+    {
+        "phrase": "来龙去脉",
+        "clue": "Entire story"
+    },
+    {
+        "phrase": "老马识途",
+        "clue": "Experienced person"
+    },
+    {
+        "phrase": "乐不思蜀",
+        "clue": "Forget duty in pleasure"
+    },
+    {
+        "phrase": "乐此不疲",
+        "clue": "Never tire of it"
+    },
+    {
+        "phrase": "雷厉风行",
+        "clue": "Vigorously and rapidly"
+    },
+    {
+        "phrase": "礼贤下士",
+        "clue": "Respect talent"
+    },
+    {
+        "phrase": "理直气壮",
+        "clue": "Justified boldness"
+    },
+    {
+        "phrase": "力挽狂澜",
+        "clue": "Turn the tide"
+    },
+    {
+        "phrase": "励精图治",
+        "clue": "Work hard for governance"
+    },
+    {
+        "phrase": "两袖清风",
+        "clue": "Uncorrupted"
+    },
+    {
+        "phrase": "临渴掘井",
+        "clue": "Prepare too late"
+    },
+    {
+        "phrase": "炉火纯青",
+        "clue": "Perfect mastery"
+    },
+    {
+        "phrase": "路不拾遗",
+        "clue": "High moral standards"
+    },
+    {
+        "phrase": "落井下石",
+        "clue": "Hit when down"
+    },
+    {
+        "phrase": "络绎不绝",
+        "clue": "Endless stream"
+    },
+    {
+        "phrase": "麻木不仁",
+        "clue": "Apathetic"
+    },
+    {
+        "phrase": "买椟还珠",
+        "clue": "Bad judgment"
+    },
+    {
+        "phrase": "满腹经纶",
+        "clue": "Highly learned"
+    },
+    {
+        "phrase": "毛遂自荐",
+        "clue": "Volunteer services"
+    },
+    {
+        "phrase": "每况愈下",
+        "clue": "Deteriorate"
+    },
+    {
+        "phrase": "蒙混过关",
+        "clue": "Bluff through"
+    },
+    {
+        "phrase": "弥天大谎",
+        "clue": "Monstrous lie"
+    },
+    {
+        "phrase": "名垂青史",
+        "clue": "Remembered in history"
+    },
+    {
+        "phrase": "名副其实",
+        "clue": "Worthy of the name"
+    },
+    {
+        "phrase": "明察秋毫",
+        "clue": "Highly observant"
+    },
+    {
+        "phrase": "明哲保身",
+        "clue": "Self-protective"
+    },
+    {
+        "phrase": "磨杵成针",
+        "clue": "Perseverance succeeds"
+    },
+    {
+        "phrase": "漠不关心",
+        "clue": "Indifferent"
+    },
+    {
+        "phrase": "目不暇接",
+        "clue": "Too many to see"
+    },
+    {
+        "phrase": "恼羞成怒",
+        "clue": "Shamed into anger"
+    },
+    {
+        "phrase": "弄巧成拙",
+        "clue": "Overreach oneself"
+    },
+    {
+        "phrase": "旁敲侧击",
+        "clue": "Hint indirectly"
+    },
+    {
+        "phrase": "鹏程万里",
+        "clue": "Brilliant future"
+    },
+    {
+        "phrase": "匹夫有责",
+        "clue": "Everyone responsible"
+    },
+    {
+        "phrase": "平易近人",
+        "clue": "Approachable"
+    },
+    {
+        "phrase": "破釜沉舟",
+        "clue": "Burn bridges"
+    },
+    {
+        "phrase": "扑朔迷离",
+        "clue": "Confusing"
+    },
+    {
+        "phrase": "杞人忧天",
+        "clue": "Groundless fears"
+    },
+    {
+        "phrase": "气势磅礴",
+        "clue": "Majestic"
+    },
+    {
+        "phrase": "黔驴技穷",
+        "clue": "At wit's end"
+    },
+    {
+        "phrase": "千载难逢",
+        "clue": "Rare opportunity"
+    },
+    {
+        "phrase": "巧夺天工",
+        "clue": "Superb craftsmanship"
+    },
+    {
+        "phrase": "切肤之痛",
+        "clue": "Deep suffering"
+    },
+    {
+        "phrase": "锲而不舍",
+        "clue": "Persevere"
+    },
+    {
+        "phrase": "罄竹难书",
+        "clue": "Too numerous to record"
+    },
+    {
+        "phrase": "轻车熟路",
+        "clue": "Do with ease"
+    },
+    {
+        "phrase": "青出于蓝",
+        "clue": "Student surpasses teacher"
+    },
+    {
+        "phrase": "情投意合",
+        "clue": "Perfect harmony"
+    },
+    {
+        "phrase": "求全责备",
+        "clue": "Demand perfection"
+    },
+    {
+        "phrase": "曲高和寡",
+        "clue": "Highbrow"
+    },
+    {
+        "phrase": "人浮于事",
+        "clue": "Overstaffed"
+    },
+    {
+        "phrase": "任重道远",
+        "clue": "Heavy responsibility"
+    },
+    {
+        "phrase": "忍辱负重",
+        "clue": "Endure disgrace"
+    },
+    {
+        "phrase": "如火如荼",
+        "clue": "In full swing"
+    },
+    {
+        "phrase": "如释重负",
+        "clue": "Relieved"
+    },
+    {
+        "phrase": "如坐针毡",
+        "clue": "On tenterhooks"
+    },
+    {
+        "phrase": "三顾茅庐",
+        "clue": "Repeatedly invite"
+    },
+    {
+        "phrase": "三缄其口",
+        "clue": "Keep silent"
+    },
+    {
+        "phrase": "沙里淘金",
+        "clue": "Extract essential"
+    },
+    {
+        "phrase": "杀鸡儆猴",
+        "clue": "Punish one to warn others"
+    },
+    {
+        "phrase": "塞翁失马",
+        "clue": "Blessing in disguise"
+    },
+    {
+        "phrase": "深思熟虑",
+        "clue": "Deliberate"
+    },
+    {
+        "phrase": "身临其境",
+        "clue": "Experience firsthand"
+    },
+    {
+        "phrase": "身先士卒",
+        "clue": "Lead the charge"
+    },
+    {
+        "phrase": "生龙活虎",
+        "clue": "Full of vigor"
+    },
+    {
+        "phrase": "胜券在握",
+        "clue": "Sure of success"
+    },
+    {
+        "phrase": "势如破竹",
+        "clue": "Irresistible force"
+    },
+    {
+        "phrase": "事实求是",
+        "clue": "Realistic"
+    },
+    {
+        "phrase": "事半功倍",
+        "clue": "Efficient"
+    },
+    {
+        "phrase": "视而不见",
+        "clue": "Turn blind eye"
+    },
+    {
+        "phrase": "手不释卷",
+        "clue": "Diligent reader"
+    },
+    {
+        "phrase": "守株待兔",
+        "clue": "Wait idly"
+    },
+    {
+        "phrase": "书香门第",
+        "clue": "Scholarly family"
+    },
+    {
+        "phrase": "束手无策",
+        "clue": "Helpless"
+    },
+    {
+        "phrase": "水到渠成",
+        "clue": "Success comes naturally"
+    },
+    {
+        "phrase": "水落石出",
+        "clue": "Truth comes out"
+    },
+    {
+        "phrase": "顺水推舟",
+        "clue": "Use opportunity"
+    },
+    {
+        "phrase": "司空见惯",
+        "clue": "Commonplace"
+    },
+    {
+        "phrase": "死灰复燃",
+        "clue": "Revive"
+    },
+    {
+        "phrase": "四面楚歌",
+        "clue": "Besieged"
+    },
+    {
+        "phrase": "同甘共苦",
+        "clue": "Share joys and sorrows"
+    },
+    {
+        "phrase": "投鼠忌器",
+        "clue": "Forbear"
+    },
+    {
+        "phrase": "偷天换日",
+        "clue": "Gigantic fraud"
+    },
+    {
+        "phrase": "退避三舍",
+        "clue": "Give way"
+    },
+    {
+        "phrase": "完璧归赵",
+        "clue": "Return intact"
+    },
+    {
+        "phrase": "望尘莫及",
+        "clue": "Out of reach"
+    },
+    {
+        "phrase": "危在旦夕",
+        "clue": "Imminent danger"
+    },
+    {
+        "phrase": "为虎作伥",
+        "clue": "Help villain"
+    },
+    {
+        "phrase": "未雨绸缪",
+        "clue": "Prepare for rainy day"
+    },
+    {
+        "phrase": "闻鸡起舞",
+        "clue": "Diligent"
+    },
+    {
+        "phrase": "温故知新",
+        "clue": "Learn from old"
+    },
+    {
+        "phrase": "无病呻吟",
+        "clue": "Fuss over nothing"
+    },
+    {
+        "phrase": "无济于事",
+        "clue": "Useless"
+    },
+    {
+        "phrase": "无独有偶",
+        "clue": "Coincidence"
+    },
+    {
+        "phrase": "无懈可击",
+        "clue": "Invulnerable"
+    },
+    {
+        "phrase": "无微不至",
+        "clue": "Meticulous"
+    },
+    {
+        "phrase": "五花八门",
+        "clue": "Great variety"
+    },
+    {
+        "phrase": "洗耳恭听",
+        "clue": "Listen respectfully"
+    },
+    {
+        "phrase": "喜闻乐见",
+        "clue": "Popular"
+    },
+    {
+        "phrase": "先入为主",
+        "clue": "Prejudiced"
+    },
+    {
+        "phrase": "相辅相成",
+        "clue": "Complement each other"
+    },
+    {
+        "phrase": "相敬如宾",
+        "clue": "Mutually respectful"
+    },
+    {
+        "phrase": "小题大做",
+        "clue": "Make big deal of small thing"
+    },
+    {
+        "phrase": "晓以利害",
+        "clue": "Explain pros and cons"
+    },
+    {
+        "phrase": "心不在焉",
+        "clue": "Absent-minded"
+    },
+    {
+        "phrase": "心旷神怡",
+        "clue": "Refreshed"
+    },
+    {
+        "phrase": "心领神会",
+        "clue": "Understand tacitly"
+    },
+    {
+        "phrase": "心猿意马",
+        "clue": "Restless"
+    },
+    {
+        "phrase": "欣欣向荣",
+        "clue": "Flourishing"
+    },
+    {
+        "phrase": "信口开河",
+        "clue": "Talk at random"
+    },
+    {
+        "phrase": "兴高采烈",
+        "clue": "Jubilant"
+    },
+    {
+        "phrase": "兴师动众",
+        "clue": "Make great stir"
+    },
+    {
+        "phrase": "虚怀若谷",
+        "clue": "Modest"
+    },
+    {
+        "phrase": "悬崖勒马",
+        "clue": "Stop before too late"
+    },
+    {
+        "phrase": "循规蹈矩",
+        "clue": "Conventional"
+    },
+    {
+        "phrase": "言不由衷",
+        "clue": "Insincere"
+    },
+    {
+        "phrase": "言简意赅",
+        "clue": "Concise"
+    },
+    {
+        "phrase": "掩耳盗铃",
+        "clue": "Deceive oneself"
+    },
+    {
+        "phrase": "扬长避短",
+        "clue": "Use strengths"
+    },
+    {
+        "phrase": "养精蓄锐",
+        "clue": "Recuperate"
+    },
+    {
+        "phrase": "摇摆不定",
+        "clue": "Wavering"
+    },
+    {
+        "phrase": "夜郎自大",
+        "clue": "Conceited"
+    },
+    {
+        "phrase": "一蹴而就",
+        "clue": "Succeed overnight"
+    },
+    {
+        "phrase": "一视同仁",
+        "clue": "Treat equally"
+    },
+    {
+        "phrase": "一帆风顺",
+        "clue": "Smooth sailing"
+    },
+    {
+        "phrase": "异曲同工",
+        "clue": "Different approach, same result"
+    },
+    {
+        "phrase": "亦步亦趋",
+        "clue": "Imitate blindly"
+    },
+    {
+        "phrase": "饮水思源",
+        "clue": "Grateful"
+    },
+    {
+        "phrase": "引人入胜",
+        "clue": "Fascinating"
+    },
+    {
+        "phrase": "应接不暇",
+        "clue": "Too busy"
+    },
+    {
+        "phrase": "与虎谋皮",
+        "clue": "Ask enemy for favor"
+    },
+    {
+        "phrase": "愚公移山",
+        "clue": "Perseverance"
+    },
+    {
+        "phrase": "语重心长",
+        "clue": "Sincere advice"
+    },
+    {
+        "phrase": "缘木求鱼",
+        "clue": "Defeat purpose"
+    },
+    {
+        "phrase": "源远流长",
+        "clue": "Long history"
+    },
+    {
+        "phrase": "约法三章",
+        "clue": "Simple rules"
+    },
+    {
+        "phrase": "再接再厉",
+        "clue": "Persistent efforts"
+    },
+    {
+        "phrase": "载歌载舞",
+        "clue": "Celebrate joyfully"
+    },
+    {
+        "phrase": "沾沾自喜",
+        "clue": "Smug"
+    },
+    {
+        "phrase": "张冠李戴",
+        "clue": "Blame wrong person"
+    },
+    {
+        "phrase": "仗义执言",
+        "clue": "Speak for justice"
+    },
+    {
+        "phrase": "朝三暮四",
+        "clue": "Change mind frequently"
+    },
+    {
+        "phrase": "昭然若揭",
+        "clue": "Obvious"
+    },
+    {
+        "phrase": "朝秦暮楚",
+        "clue": "Fickle"
+    },
+    {
+        "phrase": "战战兢兢",
+        "clue": "Cautiously"
+    },
+    {
+        "phrase": "纸上谈兵",
+        "clue": "Armchair strategist"
+    },
+    {
+        "phrase": "指鹿为马",
+        "clue": "Distort truth"
+    },
+    {
+        "phrase": "志同道合",
+        "clue": "Kindred spirits"
+    },
+    {
+        "phrase": "置之不理",
+        "clue": "Ignore"
+    },
+    {
+        "phrase": "中流砥柱",
+        "clue": "Strong support"
+    },
+    {
+        "phrase": "众志成城",
+        "clue": "Unity is strength"
+    },
+    {
+        "phrase": "周而复始",
+        "clue": "Recur"
+    },
+    {
+        "phrase": "铢积寸累",
+        "clue": "Gather little by little"
+    },
+    {
+        "phrase": "专心致志",
+        "clue": "Devoted"
+    },
+    {
+        "phrase": "转危为安",
+        "clue": "Avert crisis"
+    },
+    {
+        "phrase": "捉襟见肘",
+        "clue": "Financial difficulty"
+    },
+    {
+        "phrase": "自暴自弃",
+        "clue": "Despair"
+    },
+    {
+        "phrase": "自告奋勇",
+        "clue": "Volunteer"
+    },
+    {
+        "phrase": "自给自足",
+        "clue": "Self-sufficient"
+    },
+    {
+        "phrase": "自鸣得意",
+        "clue": "Complacent"
+    },
+    {
+        "phrase": "自圆其说",
+        "clue": "Justify oneself"
+    },
+    {
+        "phrase": "坐井观天",
+        "clue": "Narrow view"
+    },
+    {
+        "phrase": "坐失良机",
+        "clue": "Miss opportunity"
+    }
+]

@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Idiom {
+  id        Int      @id @default(autoincrement())
+  phrase    String   @unique
+  clue      String
+  difficulty String  @default("medium")
+  language   String  @default("en") // "en" or "zh"
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id        String   @id @default(uuid())
+  nickname  String   @unique
+  wins      Int      @default(0)
+  failures  Int      @default(0)
+  createdAt DateTime @default(now())
+}

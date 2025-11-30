@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idiom Guess Game</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Idiom Master</h1>
+            <p>Guess the idiom, master the language.</p>
+        </header>
+
+        <main>
+            <div id="game-area" class="game-card">
+                <div class="score-board">
+                    <span>Score: <span id="score">0</span></span>
+                    <span>Streak: <span id="streak">0</span></span>
+                </div>
+                
+                <div class="idiom-display">
+                    <p id="idiom-clue" class="clue-text">Loading...</p>
+                    <div id="word-slots" class="slots-container">
+                        <!-- Slots will be injected here -->
+                    </div>
+                </div>
+
+                <div class="interaction-area">
+                    <input type="text" id="guess-input" placeholder="Type your guess..." autocomplete="off">
+                    <button id="submit-btn" class="primary-btn">Guess</button>
+                    <button id="hint-btn" class="secondary-btn">Hint</button>
+                </div>
+
+                <div id="message-area" class="message hidden"></div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Designed with AI</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
