@@ -27,6 +27,7 @@ export default function Game() {
     const [leaderboardRefresh, setLeaderboardRefresh] = useState(0);
     const [mounted, setMounted] = useState(false);
 
+
     // Load score and user info from local storage on mount
     useEffect(() => {
         setMounted(true);
@@ -57,11 +58,20 @@ export default function Game() {
         if (!userId) return;
 
         try {
-            await fetch('/api/users', {
+            const res = await fetch('/api/users', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: userId, action }),
             });
+
+            if (res.status === 404) {
+                // User not found in DB (e.g., db reset), prompt to re-register
+                localStorage.removeItem('idiom_user_id');
+                localStorage.removeItem('idiom_user_nickname');
+                setNickname(null);
+                setShowNicknameModal(true);
+                setMessage({ text: "Session expired. Please enter your nickname again.", type: 'error' });
+            }
         } catch (error) {
             console.error('Failed to update stats', error);
         }
@@ -71,13 +81,15 @@ export default function Game() {
         setLoading(true);
         setMessage(null);
         setRevealed(false);
-        setGuess('');
+        setGuess(''); // Reset guess
         setFailedAttempts(0);
         try {
             const res = await fetch(`/api/idioms?lang=${lang}`);
             if (!res.ok) throw new Error('Failed to fetch');
             const data = await res.json();
             setCurrentIdiom(data);
+
+            setGuess('');
         } catch (error) {
             console.error(error);
             setMessage({ text: 'Failed to load idiom. Please try refreshing.', type: 'error' });
@@ -142,9 +154,13 @@ export default function Game() {
     const handleHint = () => {
         if (!currentIdiom || revealed) return;
 
-        const phrase = currentIdiom.phrase.replace(/ /g, '');
-        const firstChar = phrase[0];
-        setMessage({ text: `Hint: Starts with '${firstChar}'`, type: 'success' });
+        if (language === 'en') {
+            const firstWord = currentIdiom.phrase.split(' ')[0];
+            setMessage({ text: `Hint: Starts with "${firstWord}"`, type: 'success' });
+        } else {
+            const firstChar = currentIdiom.phrase[0];
+            setMessage({ text: `Hint: Starts with '${firstChar}'`, type: 'success' });
+        }
         setScore(s => Math.max(0, s - 2));
     };
 
@@ -214,15 +230,21 @@ export default function Game() {
 
                 <div className="idiom-display">
                     <p id="idiom-clue" className="clue-text">{currentIdiom?.clue}</p>
-                    <div id="word-slots" className="slots-container">
-                        {currentIdiom && currentIdiom.phrase.split(' ').map((word, wIndex) => (
-                            <div key={wIndex} style={{ display: 'flex', gap: '5px', margin: '0 10px' }}>
-                                {word.split('').map((char, cIndex) => (
-                                    <div key={`${wIndex}-${cIndex}`} className={`letter-slot ${revealed ? 'filled' : ''}`}>
-                                        {revealed ? char : ''}
-                                    </div>
-                                ))}
-                            </div>
+                    <div id="word-slots" className="slots-container flex flex-wrap justify-center gap-2">
+                        {currentIdiom && (language === 'en' ? (
+                            // English: Display whole words
+                            currentIdiom.phrase.split(' ').map((word, index) => (
+                                <div key={index} className={`px-3 py-2 rounded-lg border-2 border-white/30 text-white font-bold text-lg min-w-[60px] text-center ${revealed ? 'bg-white/20' : ''}`}>
+                                    {revealed ? word : ''}
+                                </div>
+                            ))
+                        ) : (
+                            // Chinese: Display characters (existing logic)
+                            currentIdiom.phrase.split('').map((char, index) => (
+                                <div key={index} className={`letter-slot ${revealed ? 'filled' : ''}`}>
+                                    {revealed ? char : ''}
+                                </div>
+                            ))
                         ))}
                     </div>
                 </div>
@@ -236,7 +258,7 @@ export default function Game() {
                         value={guess}
                         onChange={(e) => setGuess(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className={shaking ? 'shake' : ''}
+                        className={`w-full bg-white/20 border-2 border-white/30 rounded-lg px-4 py-3 text-white placeholder-purple-200 focus:outline-none focus:border-white text-center mb-4 ${shaking ? 'shake' : ''}`}
                         disabled={revealed}
                     />
 

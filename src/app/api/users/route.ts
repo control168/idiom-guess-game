@@ -50,7 +50,10 @@ export async function PUT(request: Request) {
         });
 
         return NextResponse.json(user);
-    } catch (error) {
+    } catch (error: any) {
+        if (error.code === 'P2025') {
+            return NextResponse.json({ error: 'User not found' }, { status: 404 });
+        }
         return NextResponse.json({ error: 'Failed to update stats' }, { status: 500 });
     }
 }
