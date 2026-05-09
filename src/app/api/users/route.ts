@@ -1,59 +1,40 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { signUserToken } from '@/lib/auth';
 
 const prisma = new PrismaClient();
 
+const NICK_RE = /^[\p{L}\p{N}_ \-]{1,20}$/u;
+
 export async function POST(request: Request) {
     try {
-        const { nickname } = await request.json();
+        const body = await request.json();
+        const nickname = typeof body?.nickname === 'string' ? body.nickname.trim() : '';
 
         if (!nickname) {
             return NextResponse.json({ error: 'Nickname is required' }, { status: 400 });
         }
-
-        let user = await prisma.user.findUnique({
-            where: { nickname },
-        });
-
-        if (!user) {
-            user = await prisma.user.create({
-                data: { nickname },
-            });
+        if (!NICK_RE.test(nickname)) {
+            return NextResponse.json({ error: 'Nickname must be 1–20 letters, numbers, spaces, _ or -' }, { status: 400 });
         }
 
-        return NextResponse.json(user);
-    } catch (error) {
+        let user = await prisma.user.findUnique({ where: { nickname } });
+        if (!user) {
+            user = await prisma.user.create({ data: { nickname } });
+        }
+
+        const token = signUserToken(user.id, user.nickname);
+        return NextResponse.json({
+            id: user.id,
+            nickname: user.nickname,
+            wins: user.wins,
+            failures: user.failures,
+            token,
+        });
+    } catch {
         return NextResponse.json({ error: 'Failed to create/fetch user' }, { status: 500 });
     }
 }
 
-export async function PUT(request: Request) {
-    try {
-        const { id, action } = await request.json(); // action: 'win' or 'loss'
-
-        if (!id || !action) {
-            return NextResponse.json({ error: 'User ID and action are required' }, { status: 400 });
-        }
-
-        let updateData = {};
-        if (action === 'win') {
-            updateData = { wins: { increment: 1 } };
-        } else if (action === 'loss') {
-            updateData = { failures: { increment: 1 } };
-        } else {
-            return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
-        }
-
-        const user = await prisma.user.update({
-            where: { id },
-            data: updateData,
-        });
-
-        return NextResponse.json(user);
-    } catch (error: any) {
-        if (error.code === 'P2025') {
-            return NextResponse.json({ error: 'User not found' }, { status: 404 });
-        }
-        return NextResponse.json({ error: 'Failed to update stats' }, { status: 500 });
-    }
-}
+// Note: PUT was removed in v4 — stats are now updated server-side from /api/check
+// and /api/reveal, gated by the bearer token.

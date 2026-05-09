@@ -13,7 +13,8 @@ export default function NicknameModal({ onSubmit }: NicknameModalProps) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!nickname.trim()) {
+        const trimmed = nickname.trim();
+        if (!trimmed) {
             setError('Nickname cannot be empty');
             return;
         }
@@ -23,19 +24,21 @@ export default function NicknameModal({ onSubmit }: NicknameModalProps) {
             const res = await fetch('/api/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nickname: nickname.trim() }),
+                body: JSON.stringify({ nickname: trimmed }),
             });
 
             if (!res.ok) {
-                throw new Error('Failed to register nickname');
+                const body = await res.json().catch(() => ({}));
+                throw new Error(body?.error || 'Failed to register nickname');
             }
 
             const user = await res.json();
             localStorage.setItem('idiom_user_id', user.id);
             localStorage.setItem('idiom_user_nickname', user.nickname);
+            if (user.token) localStorage.setItem('idiom_user_token', user.token);
             onSubmit(user.nickname);
-        } catch {
-            setError('Failed to save nickname. Please try again.');
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to save nickname.');
             setSubmitting(false);
         }
     };
@@ -46,7 +49,7 @@ export default function NicknameModal({ onSubmit }: NicknameModalProps) {
                 <span className="label-caps">welcome</span>
                 <h2 className="mt-2 font-serif text-4xl text-text-primary">Choose a handle</h2>
                 <p className="mt-3 text-sm leading-relaxed text-text-secondary">
-                    Track your streak, climb the leaderboard. Your nickname is your only identity here.
+                    Track your streak, climb the leaderboard. 1–20 letters, numbers, spaces, _ or -.
                 </p>
                 <form onSubmit={handleSubmit} className="mt-6">
                     <input

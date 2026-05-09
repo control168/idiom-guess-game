@@ -7,18 +7,26 @@ import { HowToPlayCard, ScoringCard } from './InfoCards';
 
 interface Idiom {
     id: number;
-    phrase: string;
     clue: string;
     difficulty?: string;
     language?: string;
+    phraseLength: number;
+    wordLengths: number[];
+    hintPrefix?: string;
 }
 
 type Lang = 'en' | 'zh' | 'word';
 
 const DIFFICULTY_LEVEL: Record<string, number> = { easy: 1, medium: 2, hard: 3 };
 
+function authHeaders(): Record<string, string> {
+    const t = typeof window !== 'undefined' ? localStorage.getItem('idiom_user_token') : null;
+    return t ? { Authorization: `Bearer ${t}` } : {};
+}
+
 export default function Game() {
     const [currentIdiom, setCurrentIdiom] = useState<Idiom | null>(null);
+    const [revealedPhrase, setRevealedPhrase] = useState<string | null>(null);
     const [score, setScore] = useState(0);
     const [streak, setStreak] = useState(0);
     const [bestStreak, setBestStreak] = useState(0);
@@ -49,6 +57,7 @@ export default function Game() {
         const savedWins = localStorage.getItem('idiom_wins');
         const savedLosses = localStorage.getItem('idiom_losses');
         const savedNickname = localStorage.getItem('idiom_user_nickname');
+        const savedToken = localStorage.getItem('idiom_user_token');
 
         if (savedScore) setScore(parseInt(savedScore));
         if (savedStreak) setStreak(parseInt(savedStreak));
@@ -56,8 +65,14 @@ export default function Game() {
         if (savedWins) setWins(parseInt(savedWins));
         if (savedLosses) setLosses(parseInt(savedLosses));
 
-        if (savedNickname) setNickname(savedNickname);
-        else setShowNicknameModal(true);
+        if (savedNickname && savedToken) {
+            setNickname(savedNickname);
+        } else if (savedNickname && !savedToken) {
+            // Existing user from a pre-token deploy — refresh token transparently
+            void refreshToken(savedNickname);
+        } else {
+            setShowNicknameModal(true);
+        }
 
         loadNewIdiom('en');
     }, []);
@@ -70,6 +85,30 @@ export default function Game() {
         localStorage.setItem('idiom_losses', losses.toString());
     }, [score, streak, bestStreak, wins, losses]);
 
+    const refreshToken = async (nick: string) => {
+        try {
+            const res = await fetch('/api/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nickname: nick }),
+            });
+            if (res.ok) {
+                const u = await res.json();
+                localStorage.setItem('idiom_user_id', u.id);
+                localStorage.setItem('idiom_user_nickname', u.nickname);
+                if (u.token) localStorage.setItem('idiom_user_token', u.token);
+                setNickname(u.nickname);
+            } else {
+                localStorage.removeItem('idiom_user_id');
+                localStorage.removeItem('idiom_user_nickname');
+                localStorage.removeItem('idiom_user_token');
+                setShowNicknameModal(true);
+            }
+        } catch {
+            setShowNicknameModal(true);
+        }
+    };
+
     const playSound = (kind: 'success' | 'error') => {
         const ref = kind === 'success' ? successAudio.current : errorAudio.current;
         if (!ref) return;
@@ -77,33 +116,17 @@ export default function Game() {
         ref.play().catch(() => { /* autoplay block — silent */ });
     };
 
-    const updateUserStats = async (action: 'win' | 'loss') => {
-        const userId = localStorage.getItem('idiom_user_id');
-        if (!userId) return;
-
-        try {
-            const res = await fetch('/api/users', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: userId, action }),
-            });
-
-            if (res.status === 404) {
-                localStorage.removeItem('idiom_user_id');
-                localStorage.removeItem('idiom_user_nickname');
-                setNickname(null);
-                setShowNicknameModal(true);
-                setMessage({ text: "Session expired. Please enter your nickname again.", type: 'error' });
-            }
-        } catch (error) {
-            console.error('Failed to update stats', error);
-        }
+    const handleAuthFailure = () => {
+        localStorage.removeItem('idiom_user_token');
+        setShowNicknameModal(true);
+        setMessage({ text: "Session expired. Please re-enter your nickname.", type: 'error' });
     };
 
     const loadNewIdiom = async (lang: Lang = language) => {
         setLoading(true);
         setMessage(null);
         setRevealed(false);
+        setRevealedPhrase(null);
         setUsedHint(false);
         setGuess('');
         setFailedAttempts(0);
@@ -127,16 +150,36 @@ export default function Game() {
         setStreak(0);
     };
 
-    const handleGuess = (raw?: string) => {
+    const handleGuess = async (raw?: string) => {
         if (!currentIdiom || revealed) return;
-        const userGuess = (raw ?? guess).trim().toLowerCase();
+        const userGuess = (raw ?? guess).trim();
         if (!userGuess) return;
-        const correctPhrase = currentIdiom.phrase.toLowerCase();
-        if (userGuess === correctPhrase) handleWin();
-        else handleLoss();
+
+        try {
+            const res = await fetch('/api/check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ idiomId: currentIdiom.id, guess: userGuess }),
+            });
+
+            if (res.status === 401) { handleAuthFailure(); return; }
+            if (!res.ok) {
+                setMessage({ text: 'Server error. Try again.', type: 'error' });
+                return;
+            }
+
+            const data = await res.json() as { correct: boolean; phrase: string | null };
+            if (data.correct && data.phrase) {
+                handleWin(data.phrase);
+            } else {
+                handleLoss();
+            }
+        } catch {
+            setMessage({ text: 'Network error. Try again.', type: 'error' });
+        }
     };
 
-    const handleWin = () => {
+    const handleWin = (phrase: string) => {
         const lvl = DIFFICULTY_LEVEL[currentIdiom?.difficulty ?? 'medium'] ?? 2;
         const cleanBonus = !usedHint ? 5 : 0;
         const earned = 10 + lvl * 5 + cleanBonus + streak * 2;
@@ -147,8 +190,9 @@ export default function Game() {
         setBestStreak(b => Math.max(b, newStreak));
         setWins(w => w + 1);
         setRevealed(true);
+        setRevealedPhrase(phrase);
+        setGuess(phrase);
         playSound('success');
-        updateUserStats('win');
         setLeaderboardRefresh(prev => prev + 1);
     };
 
@@ -156,49 +200,57 @@ export default function Game() {
         const newFailedAttempts = failedAttempts + 1;
         setFailedAttempts(newFailedAttempts);
         setStreak(0);
+        setLosses(l => l + 1);
         setShaking(true);
         setTimeout(() => setShaking(false), 500);
         playSound('error');
 
-        if (newFailedAttempts === 5 && currentIdiom) {
-            let hintText = '';
-            if (language === 'en') {
-                hintText = `Hint: starts with "${currentIdiom.phrase.split(' ').slice(0, 2).join(' ')}"`;
-            } else if (language === 'zh') {
-                hintText = `提示：開頭兩字「${currentIdiom.phrase.substring(0, 2)}」`;
-            } else {
-                hintText = `Hint: starts with "${currentIdiom.phrase.substring(0, 2).toUpperCase()}"`;
-            }
-            setMessage({ text: hintText, type: 'hint' });
+        if (newFailedAttempts === 5 && currentIdiom?.hintPrefix) {
+            const hp = currentIdiom.hintPrefix;
+            const text = language === 'zh'
+                ? `提示：開頭「${hp}」`
+                : `Hint: starts with "${language === 'word' ? hp.toUpperCase() : hp}"`;
+            setMessage({ text, type: 'hint' });
         } else {
             setMessage({ text: language === 'zh' ? "再試一次。" : "Not quite — try again.", type: 'error' });
         }
     };
 
     const handleHint = () => {
-        if (!currentIdiom || revealed) return;
+        if (!currentIdiom?.hintPrefix || revealed) return;
         setUsedHint(true);
-        let text = '';
-        if (language === 'en') {
-            text = `Hint: starts with "${currentIdiom.phrase.split(' ')[0]}"`;
-        } else if (language === 'zh') {
-            text = `提示：第一個字「${currentIdiom.phrase[0]}」`;
-        } else {
-            text = `Hint: starts with "${currentIdiom.phrase[0].toUpperCase()}"`;
-        }
+        const hp = currentIdiom.hintPrefix;
+        const text = language === 'zh'
+            ? `提示：第一個字「${hp}」`
+            : `Hint: starts with "${language === 'word' ? hp.toUpperCase() : hp}"`;
         setMessage({ text, type: 'hint' });
         setScore(s => Math.max(0, s - 2));
     };
 
-    const handleReveal = () => {
+    const handleReveal = async () => {
         if (!currentIdiom || revealed) return;
-        setGuess(currentIdiom.phrase);
-        setRevealed(true);
-        setStreak(0);
-        setLosses(l => l + 1);
-        updateUserStats('loss');
-        setLeaderboardRefresh(prev => prev + 1);
-        setMessage({ text: `${language === 'zh' ? "答案：" : "Answer:"} ${currentIdiom.phrase}`, type: 'hint' });
+        try {
+            const res = await fetch('/api/reveal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                body: JSON.stringify({ idiomId: currentIdiom.id }),
+            });
+            if (res.status === 401) { handleAuthFailure(); return; }
+            if (!res.ok) {
+                setMessage({ text: 'Server error. Try again.', type: 'error' });
+                return;
+            }
+            const data = await res.json() as { phrase: string };
+            setGuess(data.phrase);
+            setRevealedPhrase(data.phrase);
+            setRevealed(true);
+            setStreak(0);
+            setLosses(l => l + 1);
+            setLeaderboardRefresh(prev => prev + 1);
+            setMessage({ text: `${language === 'zh' ? "答案：" : "Answer:"} ${data.phrase}`, type: 'hint' });
+        } catch {
+            setMessage({ text: 'Network error. Try again.', type: 'error' });
+        }
     };
 
     const handleSkip = () => {
@@ -208,7 +260,7 @@ export default function Game() {
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') handleGuess();
+        if (e.key === 'Enter') void handleGuess();
     };
 
     const handleNicknameSubmit = (newNickname: string) => {
@@ -231,14 +283,12 @@ export default function Game() {
 
             {showNicknameModal && <NicknameModal onSubmit={handleNicknameSubmit} />}
 
-            {/* TOP HEADER */}
             <header className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
                 <Brand />
                 <LangToggle language={language} onChange={handleLanguageChange} />
                 <StatPills score={score} acc={acc} bestStreak={bestStreak} />
             </header>
 
-            {/* SUB-HEADER STRIP */}
             <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] pb-3 num-mono text-[0.7rem] uppercase tracking-[0.2em] text-text-mute">
                 <div className="flex items-center gap-4">
                     <span>round № <span className="text-text-secondary">{String(round).padStart(2, '0')}</span></span>
@@ -247,9 +297,7 @@ export default function Game() {
                 <StreakStars streak={streak} />
             </div>
 
-            {/* MAIN GRID */}
             <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
-                {/* LEFT */}
                 <div className="flex flex-col gap-4">
                     <article className="relative overflow-hidden rounded-3xl border border-[var(--color-border-strong)] bg-card p-8 lg:p-10 animate-fade-in-up">
                         <div className="flex items-center justify-between">
@@ -271,15 +319,13 @@ export default function Game() {
                             <span className="absolute -right-2 bottom-0 font-serif text-6xl leading-none text-accent/70 select-none">&rdquo;</span>
                         </div>
 
-                        {/* In word mode the slots ARE the input — render only for en/zh */}
                         {!isWord && (
                             <div className="border-t border-dashed border-[var(--color-border)] pt-6">
-                                <LetterSlots idiom={currentIdiom} language={language} revealed={revealed} />
+                                <LetterSlots idiom={currentIdiom} language={language} revealed={revealed} revealedPhrase={revealedPhrase} />
                             </div>
                         )}
                     </article>
 
-                    {/* INPUT ROW */}
                     {isWord ? (
                         <WordSlotInput
                             length={5}
@@ -287,9 +333,9 @@ export default function Game() {
                             disabled={revealed}
                             shaking={shaking}
                             revealed={revealed}
-                            answer={currentIdiom?.phrase}
+                            answer={revealedPhrase ?? undefined}
                             onChange={setGuess}
-                            onSubmit={handleGuess}
+                            onSubmit={(v) => void handleGuess(v)}
                             onNext={() => { setRound(r => r + 1); loadNewIdiom(); }}
                         />
                     ) : (
@@ -314,7 +360,7 @@ export default function Game() {
                                 </button>
                             ) : (
                                 <button
-                                    onClick={() => handleGuess()}
+                                    onClick={() => void handleGuess()}
                                     disabled={!guess.trim()}
                                     className="flex items-center gap-2 rounded-2xl bg-accent px-6 py-4 font-medium text-bg transition hover:bg-accent-soft disabled:opacity-40 disabled:hover:bg-accent"
                                 >
@@ -324,14 +370,12 @@ export default function Game() {
                         </div>
                     )}
 
-                    {/* ACTION PILLS */}
                     <div className="flex flex-wrap items-center gap-2">
                         <ActionPill label="Hint" active={usedHint} disabled={revealed} onClick={handleHint} />
-                        <ActionPill label="Reveal" disabled={revealed} onClick={handleReveal} />
+                        <ActionPill label="Reveal" disabled={revealed} onClick={() => void handleReveal()} />
                         <ActionPill label="Skip →" onClick={handleSkip} />
                     </div>
 
-                    {/* MESSAGE */}
                     {message && (
                         <div
                             className={`rounded-xl border px-4 py-3 text-sm animate-pop-in ${
@@ -347,7 +391,6 @@ export default function Game() {
                     )}
                 </div>
 
-                {/* RIGHT */}
                 <aside className="flex flex-col gap-4">
                     <HowToPlayCard />
                     <ScoringCard />
@@ -454,17 +497,28 @@ function DifficultyMeter({ level, label }: { level: number; label: string }) {
     );
 }
 
-function LetterSlots({ idiom, language, revealed }: { idiom: Idiom | null; language: Lang; revealed: boolean }) {
+function LetterSlots({
+    idiom,
+    language,
+    revealed,
+    revealedPhrase,
+}: {
+    idiom: Idiom | null;
+    language: Lang;
+    revealed: boolean;
+    revealedPhrase: string | null;
+}) {
     if (!idiom) return <div className="h-12" />;
 
     if (language === 'en') {
-        const words = idiom.phrase.split(' ');
+        const wordLengths = idiom.wordLengths ?? [];
+        const revealedWords = revealed && revealedPhrase ? revealedPhrase.split(' ') : [];
         return (
             <div className="flex flex-wrap items-end justify-center gap-x-6 gap-y-4">
-                {words.map((word, wi) => (
+                {wordLengths.map((len, wi) => (
                     <div key={wi} className="flex flex-col items-center gap-2">
                         <div className="flex gap-1.5">
-                            {Array.from(word).map((c, ci) => (
+                            {Array.from({ length: len }).map((_, ci) => (
                                 <span
                                     key={ci}
                                     className={`flex h-8 w-6 items-end justify-center border-b font-serif text-lg transition ${
@@ -473,20 +527,22 @@ function LetterSlots({ idiom, language, revealed }: { idiom: Idiom | null; langu
                                             : 'border-text-mute text-text-primary'
                                     }`}
                                 >
-                                    {revealed ? c : ''}
+                                    {revealed ? (revealedWords[wi]?.[ci] ?? '') : ''}
                                 </span>
                             ))}
                         </div>
-                        <span className="num-mono text-[0.7rem] text-text-mute">{word.length}</span>
+                        <span className="num-mono text-[0.7rem] text-text-mute">{len}</span>
                     </div>
                 ))}
             </div>
         );
     }
 
+    // zh: render fixed-width character slots; revealedPhrase fills them on reveal
+    const length = idiom.phraseLength ?? 4;
     return (
         <div className="flex flex-wrap items-end justify-center gap-2">
-            {idiom.phrase.split('').map((c, i) => (
+            {Array.from({ length }).map((_, i) => (
                 <span
                     key={i}
                     className={`flex h-12 w-12 items-center justify-center rounded-md border font-serif text-2xl transition ${
@@ -495,7 +551,7 @@ function LetterSlots({ idiom, language, revealed }: { idiom: Idiom | null; langu
                             : 'border-text-mute/60 text-text-primary'
                     }`}
                 >
-                    {revealed ? c : ''}
+                    {revealed ? (revealedPhrase?.[i] ?? '') : ''}
                 </span>
             ))}
         </div>
@@ -524,7 +580,9 @@ function WordSlotInput({
     onNext: () => void;
 }) {
     const refs = useRef<(HTMLInputElement | null)[]>([]);
-    const display = revealed && answer ? answer.toUpperCase().padEnd(length, ' ').slice(0, length) : value.toUpperCase().padEnd(length, ' ').slice(0, length);
+    const display = revealed && answer
+        ? answer.toUpperCase().padEnd(length, ' ').slice(0, length)
+        : value.toUpperCase().padEnd(length, ' ').slice(0, length);
 
     const handleSlotChange = (idx: number, raw: string) => {
         const ch = raw.replace(/[^a-zA-Z]/g, '').slice(-1);
