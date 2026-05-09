@@ -1,57 +1,81 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import NicknameModal from './NicknameModal';
 import Leaderboard from './Leaderboard';
+import { HowToPlayCard, ScoringCard } from './InfoCards';
 
 interface Idiom {
     id: number;
     phrase: string;
     clue: string;
-    meaning: string;
+    difficulty?: string;
+    language?: string;
 }
+
+type Lang = 'en' | 'zh' | 'word';
+
+const DIFFICULTY_LEVEL: Record<string, number> = { easy: 1, medium: 2, hard: 3 };
 
 export default function Game() {
     const [currentIdiom, setCurrentIdiom] = useState<Idiom | null>(null);
     const [score, setScore] = useState(0);
     const [streak, setStreak] = useState(0);
+    const [bestStreak, setBestStreak] = useState(0);
+    const [wins, setWins] = useState(0);
+    const [losses, setLosses] = useState(0);
+    const [round, setRound] = useState(1);
     const [guess, setGuess] = useState('');
-    const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+    const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' | 'hint' } | null>(null);
     const [revealed, setRevealed] = useState(false);
+    const [usedHint, setUsedHint] = useState(false);
     const [loading, setLoading] = useState(true);
     const [shaking, setShaking] = useState(false);
-    const [language, setLanguage] = useState<'en' | 'zh'>('en');
+    const [language, setLanguage] = useState<Lang>('en');
     const [failedAttempts, setFailedAttempts] = useState(0);
     const [showNicknameModal, setShowNicknameModal] = useState(false);
     const [nickname, setNickname] = useState<string | null>(null);
     const [leaderboardRefresh, setLeaderboardRefresh] = useState(0);
     const [mounted, setMounted] = useState(false);
 
+    const successAudio = useRef<HTMLAudioElement | null>(null);
+    const errorAudio = useRef<HTMLAudioElement | null>(null);
 
-    // Load score and user info from local storage on mount
     useEffect(() => {
         setMounted(true);
         const savedScore = localStorage.getItem('idiom_score');
         const savedStreak = localStorage.getItem('idiom_streak');
+        const savedBest = localStorage.getItem('idiom_best_streak');
+        const savedWins = localStorage.getItem('idiom_wins');
+        const savedLosses = localStorage.getItem('idiom_losses');
         const savedNickname = localStorage.getItem('idiom_user_nickname');
 
         if (savedScore) setScore(parseInt(savedScore));
         if (savedStreak) setStreak(parseInt(savedStreak));
+        if (savedBest) setBestStreak(parseInt(savedBest));
+        if (savedWins) setWins(parseInt(savedWins));
+        if (savedLosses) setLosses(parseInt(savedLosses));
 
-        if (savedNickname) {
-            setNickname(savedNickname);
-        } else {
-            setShowNicknameModal(true);
-        }
+        if (savedNickname) setNickname(savedNickname);
+        else setShowNicknameModal(true);
 
-        loadNewIdiom('en'); // Default to English initially
+        loadNewIdiom('en');
     }, []);
 
-    // Save score to local storage
     useEffect(() => {
         localStorage.setItem('idiom_score', score.toString());
         localStorage.setItem('idiom_streak', streak.toString());
-    }, [score, streak]);
+        localStorage.setItem('idiom_best_streak', bestStreak.toString());
+        localStorage.setItem('idiom_wins', wins.toString());
+        localStorage.setItem('idiom_losses', losses.toString());
+    }, [score, streak, bestStreak, wins, losses]);
+
+    const playSound = (kind: 'success' | 'error') => {
+        const ref = kind === 'success' ? successAudio.current : errorAudio.current;
+        if (!ref) return;
+        ref.currentTime = 0;
+        ref.play().catch(() => { /* autoplay block — silent */ });
+    };
 
     const updateUserStats = async (action: 'win' | 'loss') => {
         const userId = localStorage.getItem('idiom_user_id');
@@ -65,7 +89,6 @@ export default function Game() {
             });
 
             if (res.status === 404) {
-                // User not found in DB (e.g., db reset), prompt to re-register
                 localStorage.removeItem('idiom_user_id');
                 localStorage.removeItem('idiom_user_nickname');
                 setNickname(null);
@@ -77,53 +100,54 @@ export default function Game() {
         }
     };
 
-    const loadNewIdiom = async (lang: 'en' | 'zh' = language) => {
+    const loadNewIdiom = async (lang: Lang = language) => {
         setLoading(true);
         setMessage(null);
         setRevealed(false);
-        setGuess(''); // Reset guess
+        setUsedHint(false);
+        setGuess('');
         setFailedAttempts(0);
         try {
             const res = await fetch(`/api/idioms?lang=${lang}`);
             if (!res.ok) throw new Error('Failed to fetch');
             const data = await res.json();
             setCurrentIdiom(data);
-
-            setGuess('');
         } catch (error) {
             console.error(error);
-            setMessage({ text: 'Failed to load idiom. Please try refreshing.', type: 'error' });
+            setMessage({ text: 'Failed to load. Please refresh.', type: 'error' });
         } finally {
             setLoading(false);
         }
     };
 
-    const handleLanguageChange = (lang: 'en' | 'zh') => {
+    const handleLanguageChange = (lang: Lang) => {
         if (lang === language) return;
         setLanguage(lang);
         loadNewIdiom(lang);
         setStreak(0);
-        setScore(0);
     };
 
-    const handleGuess = () => {
+    const handleGuess = (raw?: string) => {
         if (!currentIdiom || revealed) return;
-
-        const userGuess = guess.trim().toLowerCase();
+        const userGuess = (raw ?? guess).trim().toLowerCase();
+        if (!userGuess) return;
         const correctPhrase = currentIdiom.phrase.toLowerCase();
-
-        if (userGuess === correctPhrase) {
-            handleWin();
-        } else {
-            handleLoss();
-        }
+        if (userGuess === correctPhrase) handleWin();
+        else handleLoss();
     };
 
     const handleWin = () => {
-        setMessage({ text: "Correct! You're a genius! 🎉", type: 'success' });
-        setScore(s => s + 10 + (streak * 2));
-        setStreak(s => s + 1);
+        const lvl = DIFFICULTY_LEVEL[currentIdiom?.difficulty ?? 'medium'] ?? 2;
+        const cleanBonus = !usedHint ? 5 : 0;
+        const earned = 10 + lvl * 5 + cleanBonus + streak * 2;
+        const newStreak = streak + 1;
+        setMessage({ text: `+${earned} ${cleanBonus ? "· clean +5" : ""}`, type: 'success' });
+        setScore(s => s + earned);
+        setStreak(newStreak);
+        setBestStreak(b => Math.max(b, newStreak));
+        setWins(w => w + 1);
         setRevealed(true);
+        playSound('success');
         updateUserStats('win');
         setLeaderboardRefresh(prev => prev + 1);
     };
@@ -134,40 +158,57 @@ export default function Game() {
         setStreak(0);
         setShaking(true);
         setTimeout(() => setShaking(false), 500);
+        playSound('error');
 
         if (newFailedAttempts === 5 && currentIdiom) {
-            let hintText = "";
+            let hintText = '';
             if (language === 'en') {
-                const words = currentIdiom.phrase.split(' ');
-                const hintWords = words.slice(0, 2).join(' ');
-                hintText = `Hint: The first 2 words are "${hintWords}"`;
+                hintText = `Hint: starts with "${currentIdiom.phrase.split(' ').slice(0, 2).join(' ')}"`;
+            } else if (language === 'zh') {
+                hintText = `提示：開頭兩字「${currentIdiom.phrase.substring(0, 2)}」`;
             } else {
-                const hintChars = currentIdiom.phrase.substring(0, 2);
-                hintText = `Hint: The first 2 characters are "${hintChars}"`;
+                hintText = `Hint: starts with "${currentIdiom.phrase.substring(0, 2).toUpperCase()}"`;
             }
-            setMessage({ text: hintText, type: 'success' });
+            setMessage({ text: hintText, type: 'hint' });
         } else {
-            setMessage({ text: "Not quite! Try again.", type: 'error' });
+            setMessage({ text: language === 'zh' ? "再試一次。" : "Not quite — try again.", type: 'error' });
         }
     };
 
     const handleHint = () => {
         if (!currentIdiom || revealed) return;
-
+        setUsedHint(true);
+        let text = '';
         if (language === 'en') {
-            const firstWord = currentIdiom.phrase.split(' ')[0];
-            setMessage({ text: `Hint: Starts with "${firstWord}"`, type: 'success' });
+            text = `Hint: starts with "${currentIdiom.phrase.split(' ')[0]}"`;
+        } else if (language === 'zh') {
+            text = `提示：第一個字「${currentIdiom.phrase[0]}」`;
         } else {
-            const firstChar = currentIdiom.phrase[0];
-            setMessage({ text: `Hint: Starts with '${firstChar}'`, type: 'success' });
+            text = `Hint: starts with "${currentIdiom.phrase[0].toUpperCase()}"`;
         }
+        setMessage({ text, type: 'hint' });
         setScore(s => Math.max(0, s - 2));
     };
 
+    const handleReveal = () => {
+        if (!currentIdiom || revealed) return;
+        setGuess(currentIdiom.phrase);
+        setRevealed(true);
+        setStreak(0);
+        setLosses(l => l + 1);
+        updateUserStats('loss');
+        setLeaderboardRefresh(prev => prev + 1);
+        setMessage({ text: `${language === 'zh' ? "答案：" : "Answer:"} ${currentIdiom.phrase}`, type: 'hint' });
+    };
+
+    const handleSkip = () => {
+        setStreak(0);
+        setRound(r => r + 1);
+        loadNewIdiom();
+    };
+
     const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter') {
-            handleGuess();
-        }
+        if (e.key === 'Enter') handleGuess();
     };
 
     const handleNicknameSubmit = (newNickname: string) => {
@@ -175,130 +216,396 @@ export default function Game() {
         setShowNicknameModal(false);
     };
 
-    const handleShowAnswerClick = () => {
-        if (!currentIdiom) return;
-        setGuess(currentIdiom.phrase);
-        setRevealed(true);
-        updateUserStats('loss');
-        setLeaderboardRefresh(prev => prev + 1);
-        setMessage({ text: `Answer revealed: ${currentIdiom.phrase}`, type: 'success' });
-    };
-
     if (!mounted) return null;
 
-    if (loading && !currentIdiom) {
-        return <div className="text-center text-white">Loading...</div>;
-    }
+    const total = wins + losses;
+    const acc = total > 0 ? Math.round((wins / total) * 100) : 0;
+    const difficultyKey = (currentIdiom?.difficulty ?? 'medium') as 'easy' | 'medium' | 'hard';
+    const difficultyLevel = DIFFICULTY_LEVEL[difficultyKey] ?? 2;
+    const isWord = language === 'word';
 
     return (
-        <div className="flex flex-col items-center w-full max-w-md">
-            <header className="w-full flex justify-between items-center mb-6">
-                <div>
-                    <h1 className="text-3xl font-bold text-white">Idiom Master</h1>
-                    <p className="text-purple-200 text-sm">Guess the idiom, master the language.</p>
-                </div>
-                <div className="language-toggle flex gap-2">
-                    <button
-                        className={`px-3 py-1 rounded transition-colors ${language === 'en' ? 'bg-blue-600 text-white font-bold shadow-md' : 'bg-purple-800 text-purple-200 hover:bg-purple-700'}`}
-                        onClick={() => handleLanguageChange('en')}
-                    >
-                        EN
-                    </button>
-                    <button
-                        className={`px-3 py-1 rounded transition-colors ${language === 'zh' ? 'bg-blue-600 text-white font-bold shadow-md' : 'bg-purple-800 text-purple-200 hover:bg-purple-700'}`}
-                        onClick={() => handleLanguageChange('zh')}
-                    >
-                        中文
-                    </button>
-                </div>
+        <div className="mx-auto max-w-7xl">
+            <audio ref={successAudio} src="/correct.mp3" preload="auto" />
+            <audio ref={errorAudio} src="/oops.mp3" preload="auto" />
+
+            {showNicknameModal && <NicknameModal onSubmit={handleNicknameSubmit} />}
+
+            {/* TOP HEADER */}
+            <header className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+                <Brand />
+                <LangToggle language={language} onChange={handleLanguageChange} />
+                <StatPills score={score} acc={acc} bestStreak={bestStreak} />
             </header>
-            <div className="game-card relative w-full">
-                {showNicknameModal && <NicknameModal onSubmit={handleNicknameSubmit} />}
 
-                <div className="flex justify-between items-center mb-4 mt-8">
-                    <div className="score-board">
-                        <span>Score: <span id="score">{score}</span></span>
-                        <span>Streak: <span id="streak">{streak}</span></span>
-                    </div>
+            {/* SUB-HEADER STRIP */}
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-b border-[var(--color-border)] pb-3 num-mono text-[0.7rem] uppercase tracking-[0.2em] text-text-mute">
+                <div className="flex items-center gap-4">
+                    <span>round № <span className="text-text-secondary">{String(round).padStart(2, '0')}</span></span>
+                    {nickname && <span>· playing as <span className="text-text-primary normal-case tracking-normal font-sans">{nickname}</span></span>}
                 </div>
+                <StreakStars streak={streak} />
+            </div>
 
-                {nickname && (
-                    <div className="text-center mb-2 text-purple-200 text-sm">
-                        Playing as: <span className="font-bold text-white">{nickname}</span>
-                    </div>
-                )}
-
-                <div className="idiom-display">
-                    <p id="idiom-clue" className="clue-text">{currentIdiom?.clue}</p>
-                    <div id="word-slots" className="slots-container flex flex-wrap justify-center gap-2">
-                        {currentIdiom && (language === 'en' ? (
-                            // English: Display whole words
-                            currentIdiom.phrase.split(' ').map((word, index) => (
-                                <div key={index} className={`px-3 py-2 rounded-lg border-2 border-white/30 text-white font-bold text-lg min-w-[60px] text-center ${revealed ? 'bg-white/20' : ''}`}>
-                                    {revealed ? word : ''}
-                                </div>
-                            ))
-                        ) : (
-                            // Chinese: Display characters (existing logic)
-                            currentIdiom.phrase.split('').map((char, index) => (
-                                <div key={index} className={`letter-slot ${revealed ? 'filled' : ''}`}>
-                                    {revealed ? char : ''}
-                                </div>
-                            ))
-                        ))}
-                    </div>
-                </div>
-
-                <div className="interaction-area">
-                    <input
-                        type="text"
-                        id="guess-input"
-                        placeholder={language === 'en' ? "Type your guess..." : "輸入成語..."}
-                        autoComplete="off"
-                        value={guess}
-                        onChange={(e) => setGuess(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        className={`w-full bg-white/20 border-2 border-white/30 rounded-lg px-4 py-3 text-white placeholder-purple-200 focus:outline-none focus:border-white text-center mb-4 ${shaking ? 'shake' : ''}`}
-                        disabled={revealed}
-                    />
-
-                    {!revealed ? (
-                        <div className="flex gap-2 justify-center mt-4">
-                            <button id="submit-btn" className="primary-btn" onClick={handleGuess} disabled={revealed}>
-                                {language === 'en' ? "Guess" : "猜"}
-                            </button>
-                            <button id="hint-btn" className="secondary-btn" onClick={handleHint} disabled={revealed}>
-                                {language === 'en' ? "Hint" : "提示"}
-                            </button>
+            {/* MAIN GRID */}
+            <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
+                {/* LEFT */}
+                <div className="flex flex-col gap-4">
+                    <article className="relative overflow-hidden rounded-3xl border border-[var(--color-border-strong)] bg-card p-8 lg:p-10 animate-fade-in-up">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <span className="rounded-full border border-[var(--color-border-strong)] px-3 py-1 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-text-secondary">
+                                    {language === 'en' ? 'English' : language === 'zh' ? '中文' : '5-Letter'}
+                                </span>
+                                <span className="text-text-mute">·</span>
+                                <DifficultyMeter level={difficultyLevel} label={difficultyKey} />
+                            </div>
+                            <span className="label-caps">{isWord ? 'word' : 'idiom'}</span>
                         </div>
+
+                        <div className="relative mt-10 mb-10">
+                            <span className="absolute -left-2 -top-4 font-serif text-6xl leading-none text-accent/70 select-none">&ldquo;</span>
+                            <p className="px-6 font-serif text-3xl leading-snug text-text-primary lg:text-4xl">
+                                {loading ? <span className="text-text-mute italic">loading…</span> : currentIdiom?.clue}
+                            </p>
+                            <span className="absolute -right-2 bottom-0 font-serif text-6xl leading-none text-accent/70 select-none">&rdquo;</span>
+                        </div>
+
+                        {/* In word mode the slots ARE the input — render only for en/zh */}
+                        {!isWord && (
+                            <div className="border-t border-dashed border-[var(--color-border)] pt-6">
+                                <LetterSlots idiom={currentIdiom} language={language} revealed={revealed} />
+                            </div>
+                        )}
+                    </article>
+
+                    {/* INPUT ROW */}
+                    {isWord ? (
+                        <WordSlotInput
+                            length={5}
+                            value={guess}
+                            disabled={revealed}
+                            shaking={shaking}
+                            revealed={revealed}
+                            answer={currentIdiom?.phrase}
+                            onChange={setGuess}
+                            onSubmit={handleGuess}
+                            onNext={() => { setRound(r => r + 1); loadNewIdiom(); }}
+                        />
                     ) : (
-                        <button
-                            id="next-round-btn"
-                            className="w-full py-3 mt-4 bg-green-500 text-white rounded-lg font-bold text-lg hover:bg-green-600 transition shadow-lg"
-                            onClick={() => loadNewIdiom()}
+                        <div className={`grid grid-cols-[auto_1fr_auto] items-stretch gap-3 ${shaking ? 'animate-shake' : ''}`}>
+                            <div className="flex items-center px-4 label-caps">guess</div>
+                            <input
+                                type="text"
+                                placeholder={language === 'en' ? "Type the idiom…" : "輸入成語…"}
+                                autoComplete="off"
+                                value={guess}
+                                onChange={(e) => setGuess(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                disabled={revealed}
+                                className="w-full rounded-2xl border border-[var(--color-border)] bg-card px-5 py-4 font-serif text-xl text-text-primary placeholder:text-text-mute focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 transition disabled:opacity-60"
+                            />
+                            {revealed ? (
+                                <button
+                                    onClick={() => { setRound(r => r + 1); loadNewIdiom(); }}
+                                    className="flex items-center gap-2 rounded-2xl bg-accent px-6 py-4 font-medium text-bg transition hover:bg-accent-soft"
+                                >
+                                    Next <span className="num-mono text-sm">→</span>
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => handleGuess()}
+                                    disabled={!guess.trim()}
+                                    className="flex items-center gap-2 rounded-2xl bg-accent px-6 py-4 font-medium text-bg transition hover:bg-accent-soft disabled:opacity-40 disabled:hover:bg-accent"
+                                >
+                                    Submit <kbd className="rounded bg-bg/30 px-1.5 py-0.5 num-mono text-xs">↵</kbd>
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+                    {/* ACTION PILLS */}
+                    <div className="flex flex-wrap items-center gap-2">
+                        <ActionPill label="Hint" active={usedHint} disabled={revealed} onClick={handleHint} />
+                        <ActionPill label="Reveal" disabled={revealed} onClick={handleReveal} />
+                        <ActionPill label="Skip →" onClick={handleSkip} />
+                    </div>
+
+                    {/* MESSAGE */}
+                    {message && (
+                        <div
+                            className={`rounded-xl border px-4 py-3 text-sm animate-pop-in ${
+                                message.type === 'success'
+                                    ? 'border-success/30 bg-success/10 text-success'
+                                    : message.type === 'error'
+                                        ? 'border-error/30 bg-error/10 text-error'
+                                        : 'border-accent/30 bg-accent-dim text-accent'
+                            }`}
                         >
-                            {language === 'en' ? "Next Round ➔" : "下一輪 ➔"}
-                        </button>
+                            {message.text}
+                        </div>
                     )}
                 </div>
 
-                {failedAttempts >= 5 && !revealed && (
+                {/* RIGHT */}
+                <aside className="flex flex-col gap-4">
+                    <HowToPlayCard />
+                    <ScoringCard />
+                    <Leaderboard refreshTrigger={leaderboardRefresh} currentNickname={nickname} />
+                </aside>
+            </div>
+        </div>
+    );
+}
+
+/* ---------- Sub-components ---------- */
+
+function Brand() {
+    return (
+        <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent font-serif text-2xl italic text-bg">
+                i
+            </span>
+            <div>
+                <h1 className="font-serif text-2xl italic leading-none text-text-primary">Idiomatica</h1>
+                <p className="mt-1 label-caps">A Daily Idiom Game</p>
+            </div>
+        </div>
+    );
+}
+
+function LangToggle({ language, onChange }: { language: Lang; onChange: (l: Lang) => void }) {
+    const opts: { key: Lang; primary: string; secondary: string }[] = [
+        { key: 'en', primary: 'EN', secondary: 'English' },
+        { key: 'zh', primary: '中文', secondary: 'Chéngyǔ' },
+        { key: 'word', primary: '5L', secondary: 'Word' },
+    ];
+
+    return (
+        <div className="inline-flex items-center rounded-full border border-[var(--color-border-strong)] bg-card/80 p-1.5 backdrop-blur-sm">
+            {opts.map((o) => {
+                const active = language === o.key;
+                return (
                     <button
-                        onClick={handleShowAnswerClick}
-                        className="mt-2 w-full text-sm text-purple-200 hover:text-white underline"
+                        key={o.key}
+                        onClick={() => onChange(o.key)}
+                        className={`rounded-full px-4 py-2 text-center transition ${
+                            active ? 'bg-bg text-text-primary shadow-inner' : 'text-text-secondary hover:text-text-primary'
+                        }`}
                     >
-                        {language === 'en' ? "Show Answer" : "顯示答案"}
+                        <span className={`block text-base leading-none ${active ? 'text-accent' : 'text-text-secondary'} ${o.key === 'zh' ? 'font-serif' : 'num-mono uppercase tracking-[0.15em] text-[0.7rem]'}`}>
+                            {o.primary}
+                        </span>
+                        <span className="block label-caps mt-0.5 text-[0.6rem]">{o.secondary}</span>
+                    </button>
+                );
+            })}
+        </div>
+    );
+}
+
+function StatPills({ score, acc, bestStreak }: { score: number; acc: number; bestStreak: number }) {
+    return (
+        <div className="flex items-center gap-2">
+            <Pill label="score" value={String(score)} />
+            <Pill label="acc" value={`${acc}%`} />
+            <Pill label="best" value={`${bestStreak}×`} />
+        </div>
+    );
+}
+
+function Pill({ label, value }: { label: string; value: string }) {
+    return (
+        <div className="flex items-baseline gap-2 rounded-xl border border-[var(--color-border-strong)] bg-card/80 px-3 py-2 backdrop-blur-sm">
+            <span className="label-caps">{label}</span>
+            <span className="num-mono text-base text-text-primary">{value}</span>
+        </div>
+    );
+}
+
+function StreakStars({ streak }: { streak: number }) {
+    const max = 5;
+    return (
+        <div className="flex items-center gap-2">
+            <span>streak</span>
+            <span className="tracking-[0.2em] text-accent">
+                {Array.from({ length: max }).map((_, i) => (
+                    <span key={i}>{i < streak ? '★' : '☆'}</span>
+                ))}
+            </span>
+            {streak > max && <span className="num-mono text-accent">+{streak - max}</span>}
+        </div>
+    );
+}
+
+function DifficultyMeter({ level, label }: { level: number; label: string }) {
+    return (
+        <div className="flex items-center gap-2">
+            <div className="flex gap-0.5">
+                {[1, 2, 3].map((i) => (
+                    <span
+                        key={i}
+                        className={`h-3 w-1.5 rounded-sm ${i <= level ? 'bg-accent' : 'bg-text-mute/40'}`}
+                    />
+                ))}
+            </div>
+            <span className="label-caps">{label}</span>
+        </div>
+    );
+}
+
+function LetterSlots({ idiom, language, revealed }: { idiom: Idiom | null; language: Lang; revealed: boolean }) {
+    if (!idiom) return <div className="h-12" />;
+
+    if (language === 'en') {
+        const words = idiom.phrase.split(' ');
+        return (
+            <div className="flex flex-wrap items-end justify-center gap-x-6 gap-y-4">
+                {words.map((word, wi) => (
+                    <div key={wi} className="flex flex-col items-center gap-2">
+                        <div className="flex gap-1.5">
+                            {Array.from(word).map((c, ci) => (
+                                <span
+                                    key={ci}
+                                    className={`flex h-8 w-6 items-end justify-center border-b font-serif text-lg transition ${
+                                        revealed
+                                            ? 'border-accent text-accent'
+                                            : 'border-text-mute text-text-primary'
+                                    }`}
+                                >
+                                    {revealed ? c : ''}
+                                </span>
+                            ))}
+                        </div>
+                        <span className="num-mono text-[0.7rem] text-text-mute">{word.length}</span>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-wrap items-end justify-center gap-2">
+            {idiom.phrase.split('').map((c, i) => (
+                <span
+                    key={i}
+                    className={`flex h-12 w-12 items-center justify-center rounded-md border font-serif text-2xl transition ${
+                        revealed
+                            ? 'border-accent bg-accent-dim text-accent'
+                            : 'border-text-mute/60 text-text-primary'
+                    }`}
+                >
+                    {revealed ? c : ''}
+                </span>
+            ))}
+        </div>
+    );
+}
+
+function WordSlotInput({
+    length,
+    value,
+    disabled,
+    shaking,
+    revealed,
+    answer,
+    onChange,
+    onSubmit,
+    onNext,
+}: {
+    length: number;
+    value: string;
+    disabled: boolean;
+    shaking: boolean;
+    revealed: boolean;
+    answer?: string;
+    onChange: (v: string) => void;
+    onSubmit: (v?: string) => void;
+    onNext: () => void;
+}) {
+    const refs = useRef<(HTMLInputElement | null)[]>([]);
+    const display = revealed && answer ? answer.toUpperCase().padEnd(length, ' ').slice(0, length) : value.toUpperCase().padEnd(length, ' ').slice(0, length);
+
+    const handleSlotChange = (idx: number, raw: string) => {
+        const ch = raw.replace(/[^a-zA-Z]/g, '').slice(-1);
+        const arr = display.split('');
+        arr[idx] = ch;
+        const next = arr.join('').trimEnd();
+        onChange(next);
+        if (ch && idx < length - 1) refs.current[idx + 1]?.focus();
+        if (ch && idx === length - 1 && next.replace(/\s/g, '').length === length) {
+            onSubmit(next);
+        }
+    };
+
+    const handleKeyDown = (idx: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Backspace' && !display[idx].trim() && idx > 0) {
+            refs.current[idx - 1]?.focus();
+        } else if (e.key === 'Enter') {
+            onSubmit();
+        }
+    };
+
+    return (
+        <div className="flex flex-col gap-3">
+            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3">
+                <span className="px-4 label-caps">guess</span>
+                <div className={`flex justify-center gap-2 ${shaking ? 'animate-shake' : ''}`}>
+                    {Array.from({ length }).map((_, i) => {
+                        const ch = display[i] === ' ' ? '' : display[i];
+                        return (
+                            <input
+                                key={i}
+                                ref={(el) => { refs.current[i] = el; }}
+                                type="text"
+                                maxLength={1}
+                                value={ch}
+                                onChange={(e) => handleSlotChange(i, e.target.value)}
+                                onKeyDown={(e) => handleKeyDown(i, e)}
+                                disabled={disabled}
+                                className={`h-14 w-14 rounded-xl border-2 text-center font-serif text-2xl uppercase transition focus:outline-none ${
+                                    revealed
+                                        ? 'border-accent bg-accent-dim text-accent'
+                                        : 'border-[var(--color-border-strong)] bg-card text-text-primary focus:border-accent focus:ring-2 focus:ring-accent/20'
+                                }`}
+                            />
+                        );
+                    })}
+                </div>
+                {revealed ? (
+                    <button
+                        onClick={onNext}
+                        className="flex items-center gap-2 rounded-2xl bg-accent px-6 py-4 font-medium text-bg transition hover:bg-accent-soft"
+                    >
+                        Next <span className="num-mono text-sm">→</span>
+                    </button>
+                ) : (
+                    <button
+                        onClick={() => onSubmit()}
+                        disabled={value.replace(/\s/g, '').length < length}
+                        className="flex items-center gap-2 rounded-2xl bg-accent px-6 py-4 font-medium text-bg transition hover:bg-accent-soft disabled:opacity-40 disabled:hover:bg-accent"
+                    >
+                        Submit <kbd className="rounded bg-bg/30 px-1.5 py-0.5 num-mono text-xs">↵</kbd>
                     </button>
                 )}
-
-                {message && (
-                    <div className={`message ${message.type}`}>
-                        {message.text}
-                    </div>
-                )}
             </div>
-
-            <Leaderboard refreshTrigger={leaderboardRefresh} />
         </div>
+    );
+}
+
+function ActionPill({ label, active, disabled, onClick }: { label: string; active?: boolean; disabled?: boolean; onClick: () => void }) {
+    return (
+        <button
+            onClick={onClick}
+            disabled={disabled}
+            className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition ${
+                active
+                    ? 'border-accent bg-accent-dim text-accent'
+                    : 'border-[var(--color-border-strong)] bg-card/60 text-text-secondary hover:border-accent/40 hover:text-text-primary'
+            } disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-[var(--color-border-strong)] disabled:hover:text-text-secondary`}
+        >
+            {active && <span className="h-1.5 w-1.5 rounded-full bg-accent" />}
+            {label}
+        </button>
     );
 }

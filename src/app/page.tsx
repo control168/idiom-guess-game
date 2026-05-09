@@ -2,16 +2,8 @@ import Game from "@/components/Game";
 
 export default function Home() {
   return (
-    <div className="app-container">
-
-
-      <main>
-        <Game />
-      </main>
-
-      <footer>
-        <p>Designed with AI</p>
-      </footer>
+    <div className="relative z-10 min-h-screen w-full px-6 py-8 lg:px-12 lg:py-10">
+      <Game />
     </div>
   );
 }

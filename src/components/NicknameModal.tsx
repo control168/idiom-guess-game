@@ -9,6 +9,7 @@ interface NicknameModalProps {
 export default function NicknameModal({ onSubmit }: NicknameModalProps) {
     const [nickname, setNickname] = useState('');
     const [error, setError] = useState('');
+    const [submitting, setSubmitting] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -17,6 +18,7 @@ export default function NicknameModal({ onSubmit }: NicknameModalProps) {
             return;
         }
 
+        setSubmitting(true);
         try {
             const res = await fetch('/api/users', {
                 method: 'POST',
@@ -32,31 +34,37 @@ export default function NicknameModal({ onSubmit }: NicknameModalProps) {
             localStorage.setItem('idiom_user_id', user.id);
             localStorage.setItem('idiom_user_nickname', user.nickname);
             onSubmit(user.nickname);
-        } catch (err) {
+        } catch {
             setError('Failed to save nickname. Please try again.');
+            setSubmitting(false);
         }
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full">
-                <h2 className="text-2xl font-bold mb-4 text-gray-800">Welcome!</h2>
-                <p className="mb-4 text-gray-600">Please enter a nickname to track your stats.</p>
-                <form onSubmit={handleSubmit}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 backdrop-blur-md p-4 animate-fade-in">
+            <div className="w-full max-w-md rounded-3xl border border-[var(--color-border-strong)] bg-card p-8 shadow-2xl animate-fade-in-up">
+                <span className="label-caps">welcome</span>
+                <h2 className="mt-2 font-serif text-4xl text-text-primary">Choose a handle</h2>
+                <p className="mt-3 text-sm leading-relaxed text-text-secondary">
+                    Track your streak, climb the leaderboard. Your nickname is your only identity here.
+                </p>
+                <form onSubmit={handleSubmit} className="mt-6">
                     <input
                         type="text"
                         value={nickname}
                         onChange={(e) => setNickname(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded mb-4 text-black"
-                        placeholder="Your Nickname"
+                        className="w-full rounded-xl border border-[var(--color-border-strong)] bg-bg-soft px-4 py-3 font-serif text-xl text-text-primary placeholder:text-text-mute focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30 transition"
+                        placeholder="your nickname"
                         autoFocus
+                        maxLength={20}
                     />
-                    {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+                    {error && <p className="mt-3 text-sm text-error">{error}</p>}
                     <button
                         type="submit"
-                        className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700 transition"
+                        disabled={submitting}
+                        className="mt-6 w-full rounded-xl bg-accent px-4 py-3 font-medium text-bg transition hover:bg-accent-soft disabled:opacity-60"
                     >
-                        Start Playing
+                        {submitting ? "Saving…" : "Start playing →"}
                     </button>
                 </form>
             </div>
