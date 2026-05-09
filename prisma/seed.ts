@@ -6,30 +6,27 @@ import * as OpenCC from 'opencc-js';
 
 const prisma = new PrismaClient()
 
-const enIdioms = [
-    { phrase: "break the ice", clue: "To start a conversation in a social setting" },
-    { phrase: "bite the bullet", clue: "To decide to do something difficult or unpleasant" },
-    { phrase: "piece of cake", clue: "Something very easy to do" },
-    { phrase: "hit the sack", clue: "To go to bed" },
-    { phrase: "miss the boat", clue: "To be too late to take advantage of an opportunity" },
-    { phrase: "under the weather", clue: "Feeling slightly sick or unwell" },
-    { phrase: "spill the beans", clue: "To reveal a secret" },
-    { phrase: "break a leg", clue: "Good luck (often said to actors)" },
-    { phrase: "sat on the fence", clue: "Undecided about something" },
-    { phrase: "through thick and thin", clue: "Under all circumstances, no matter how difficult" }
-]
+interface EnIdiom { phrase: string; clue: string; difficulty?: string }
 
 async function main() {
     console.log('Start seeding ...')
 
-    // Seed English Idioms
+    // Seed English Idioms from prisma/idioms_en.json
+    const enIdiomsPath = path.join(process.cwd(), 'prisma', 'idioms_en.json');
+    const enIdioms: EnIdiom[] = JSON.parse(fs.readFileSync(enIdiomsPath, 'utf-8'));
     for (const idiom of enIdioms) {
         await prisma.idiom.upsert({
             where: { phrase: idiom.phrase },
-            update: {},
-            create: { ...idiom, language: 'en' },
+            update: { clue: idiom.clue, difficulty: idiom.difficulty ?? 'medium' },
+            create: {
+                phrase: idiom.phrase,
+                clue: idiom.clue,
+                difficulty: idiom.difficulty ?? 'medium',
+                language: 'en',
+            },
         })
     }
+    console.log(`Seeded ${enIdioms.length} English idioms.`);
 
     // Seed Chinese Idioms
     const zhIdiomsPath = path.join(process.cwd(), 'prisma', 'idioms_zh.json');
